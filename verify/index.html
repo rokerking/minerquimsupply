@@ -1,1 +1,220 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verificación Documental | MINERQUIM I SUPPLY LLC</title>
+    <style>
+        :root {
+            --primary: #081B2E;
+            --secondary: #132E48;
+            --accent: #00AEFF;
+            --text-dark: #2A2F45;
+            --bg-light: #F4F7FA;
+            --white: #FFFFFF;
+            --success: #10B981;
+            --success-bg: #ECFDF5;
+        }
 
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            line-height: 1.6;
+            padding: 2rem 1rem;
+        }
+
+        .verify-card {
+            max-width: 650px;
+            margin: 0 auto;
+            background-color: var(--white);
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            overflow: hidden;
+            border: 1px solid #E2ECF5;
+        }
+
+        .verify-header {
+            background-color: var(--primary);
+            color: var(--white);
+            padding: 2rem;
+            text-align: center;
+            border-bottom: 3px solid var(--accent);
+        }
+
+        .verify-logo {
+            max-width: 130px;
+            height: auto;
+            margin-bottom: 1rem;
+            border-radius: 6px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+
+        .verify-header h1 {
+            font-size: 1.4rem;
+            letter-spacing: 1px;
+        }
+
+        .verify-header p {
+            font-size: 0.85rem;
+            color: #A0C4DF;
+            margin-top: 0.2rem;
+        }
+
+        .status-banner {
+            background-color: var(--success-bg);
+            color: #065F46;
+            border-left: 5px solid var(--success);
+            padding: 1rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 700;
+            font-size: 1.05rem;
+        }
+
+        .status-icon {
+            background-color: var(--success);
+            color: var(--white);
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+        }
+
+        .verify-body {
+            padding: 2rem;
+        }
+
+        .doc-title {
+            font-size: 1.2rem;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid #E2ECF5;
+            padding-bottom: 0.5rem;
+        }
+
+        .data-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.2rem;
+            margin-bottom: 2rem;
+        }
+
+        .data-item {
+            background-color: #F8FAFC;
+            padding: 0.8rem 1rem;
+            border-radius: 6px;
+            border: 1px solid #E2E8F0;
+        }
+
+        .data-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: #64748B;
+            font-weight: 700;
+            display: block;
+            margin-bottom: 0.2rem;
+        }
+
+        .data-value {
+            font-size: 0.95rem;
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        .verify-footer {
+            background-color: #F1F5F9;
+            padding: 1.2rem;
+            text-align: center;
+            font-size: 0.8rem;
+            color: #64748B;
+            border-top: 1px solid #E2E8F0;
+        }
+
+        .verify-footer a {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        @media (max-width: 500px) {
+            .data-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="verify-card">
+        <div class="verify-header">
+            <img src="/logo.jpg" alt="Logo MINERQUIM I SUPPLY LLC" class="verify-logo">
+            <h1>MINERQUIM I SUPPLY LLC</h1>
+            <p>SISTEMA DE AUTENTICIDAD DOCUMENTAL EN LÍNEA</p>
+        </div>
+
+        <div class="status-banner">
+            <div class="status-icon">✓</div>
+            <div>DOCUMENTO OFICIAL AUTÉNTICO Y REGISTRADO</div>
+        </div>
+
+        <div class="verify-body">
+            <h2 class="doc-title">Ficha de Oferta Corporativa (FCO)</h2>
+
+            <div class="data-grid">
+                <div class="data-item full-width">
+                    <span class="data-label">Código Único de Verificación</span>
+                    <span class="data-value" style="color: var(--accent); font-family: monospace; font-size: 1.1rem;">FCO-2026-MQ-001</span>
+                </div>
+
+                <div class="data-item">
+                    <span class="data-label">Entidad Emisora</span>
+                    <span class="data-value">MINERQUIM I SUPPLY LLC</span>
+                </div>
+
+                <div class="data-item">
+                    <span class="data-label">Registro Estatal (USA)</span>
+                    <span class="data-value">Florida Reg. L24000306713</span>
+                </div>
+
+                <div class="data-item">
+                    <span class="data-label">Representante Legal</span>
+                    <span class="data-value">Manuel A. Fernandes M. (CEO)</span>
+                </div>
+
+                <div class="data-item">
+                    <span class="data-label">Estatus Documental</span>
+                    <span class="data-value" style="color: var(--success);">VIGENTE / VERIFICADO</span>
+                </div>
+
+                <div class="data-item full-width">
+                    <span class="data-label">Propósito Comercial</span>
+                    <span class="data-value">Suministro e Insumos Industriales, Mineros y Petroleros.</span>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 1.5rem;">
+                <a href="/" style="display: inline-block; background-color: var(--primary); color: var(--white); padding: 0.6rem 1.5rem; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 0.9rem;">Volver al Portal Principal</a>
+            </div>
+        </div>
+
+        <div class="verify-footer">
+            <p>© 2026 MINERQUIM I SUPPLY LLC | 8813 W 35TH AV, Hialeah, FL 33018, USA</p>
+            <p>Contacto de Seguridad: <a href="mailto:manuelf@minerquimsupply.com">manuelf@minerquimsupply.com</a></p>
+        </div>
+    </div>
+
+</body>
+</html>
