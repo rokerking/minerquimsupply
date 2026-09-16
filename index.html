@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MINERQUIM I SUPPLY LLC | Suministros Industriales y Mineros</title>
+    <title>MINERQUIM I SUPPLY LLC | Minería, Química y Soluciones Petroleras</title>
     <style>
         :root {
             --primary: #0A2540;
@@ -76,26 +75,26 @@
         }
 
         .hero {
-            background: linear-gradient(135deg, rgba(10, 37, 64, 0.95), rgba(15, 23, 42, 0.9)), 
-                        url('https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=1350&q=80') center/cover;
+            background: linear-gradient(135deg, rgba(10, 37, 64, 0.88), rgba(15, 23, 42, 0.88)), 
+                        url('https://images.unsplash.com/photo-1578575437130-527eed3abbec?auto=format&fit=crop&w=1400&q=80') center/cover;
             color: var(--white);
-            padding: 5rem 5%;
+            padding: 6.5rem 5%;
             text-align: center;
         }
 
         .hero-content {
-            max-width: 800px;
+            max-width: 850px;
             margin: 0 auto;
         }
 
         .hero h1 {
-            font-size: 2.5rem;
+            font-size: 2.8rem;
             margin-bottom: 1rem;
             font-weight: 700;
         }
 
         .hero p {
-            font-size: 1.2rem;
+            font-size: 1.25rem;
             margin-bottom: 2rem;
             opacity: 0.9;
         }
@@ -104,7 +103,7 @@
             display: inline-block;
             background-color: var(--accent);
             color: var(--primary);
-            padding: 0.8rem 2rem;
+            padding: 0.82rem 2.2rem;
             border-radius: 5px;
             text-decoration: none;
             font-weight: 700;
@@ -148,36 +147,48 @@
         .card {
             background-color: var(--white);
             border-radius: 8px;
-            padding: 2rem;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-            border-top: 4px solid var(--primary);
-            transition: transform 0.3s;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+            transition: transform 0.3s, box-shadow 0.3s;
         }
 
         .card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-6px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.12);
+        }
+
+        .card-img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+        }
+
+        .card-body {
+            padding: 1.6rem;
         }
 
         .card h3 {
             color: var(--primary);
-            margin-bottom: 1rem;
+            margin-bottom: 0.8rem;
+            font-size: 1.3rem;
         }
 
         .reg-badge {
             background-color: #e2e8f0;
-            padding: 0.2rem 0.6rem;
+            padding: 0.3rem 0.8rem;
             border-radius: 4px;
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             color: #475569;
             display: inline-block;
             margin-bottom: 1rem;
+            font-weight: 600;
         }
 
         footer {
             background-color: var(--primary);
             color: var(--white);
             text-align: center;
-            padding: 2rem 5%;
+            padding: 2.2rem 5%;
             font-size: 0.9rem;
             border-top: 1px solid rgba(255,255,255,0.1);
         }
@@ -188,7 +199,7 @@
         }
 
         @media (max-width: 768px) {
-            .hero h1 { font-size: 1.8rem; }
+            .hero h1 { font-size: 2rem; }
             .nav-container { flex-direction: column; text-align: center; gap: 1rem; }
             nav a { margin: 0 0.5rem; }
         }
@@ -200,11 +211,11 @@
         <div class="nav-container">
             <div>
                 <div class="logo">MINERQUIM <span>I SUPPLY</span> LLC</div>
-                <span class="sub-logo">U.S. Industrial & Mining Logistics</span>
+                <span class="sub-logo">U.S. Industrial, Mining & Oil Logistics</span>
             </div>
             <nav>
                 <a href="#nosotros">Nosotros</a>
-                <a href="#servicios">Servicios</a>
+                <a href="#servicios">Suministros</a>
                 <a href="#contacto">Contacto</a>
                 <a href="/verify/" style="color: var(--accent);">Verificar Documento</a>
             </nav>
@@ -213,48 +224,59 @@
 
     <section class="hero">
         <div class="hero-content">
-            <h1>Soluciones Integrales en Suministros Industriales y Mineros</h1>
-            <p>Logística internacional, procura especializada y representación comercial de alta precisión.</p>
+            <h1>Procura e Insumos para la Industria Minera, Química y Petrolera</h1>
+            <p>Representación corporativa, abastecimiento especializado y gestión logística global de alta precisión.</p>
             <a href="#contacto" class="btn">Contactar un Asesor</a>
         </div>
     </section>
 
     <div class="container" id="nosotros">
         <h2 class="section-title">Nuestra Empresa</h2>
-        <div style="text-align: center; max-width: 800px; margin: 0 auto 3rem;">
+        <div style="text-align: center; max-width: 850px; margin: 0 auto 3rem;">
             <span class="reg-badge">Florida Reg. L24000306713</span>
-            <p><strong>MINERQUIM I SUPPLY LLC</strong> es una entidad corporativa registrada en EE. UU., especializada en la distribución, procura de materiales industriales, químicos y soluciones logísticas internacionales para el sector extractivo y productivo.</p>
+            <p style="font-size: 1.1rem;"><strong>MINERQUIM I SUPPLY LLC</strong> es una entidad corporativa registrada en EE. UU., especializada en la procura, comercio exterior y distribución de reactivos químicos, insumos mineros e infraestructura para la industria de los hidrocarburos y sectores extractivos.</p>
         </div>
 
-        <h2 class="section-title" id="servicios">Líneas de Operación</h2>
+        <h2 class="section-title" id="servicios">Sectores Estratégicos</h2>
         <div class="grid-3">
             <div class="card">
-                <h3>Suministros Industriales</h3>
-                <p>Procura y distribución de insumos técnicos, herramientas de alta potencia e instrumentación para proyectos de gran escala.</p>
+                <img src="https://images.unsplash.com/photo-1579548122080-c35fd6820ecb?auto=format&fit=crop&w=700&q=80" alt="Suministros de Minería" class="card-img">
+                <div class="card-body">
+                    <h3>Sector Minero</h3>
+                    <p>Procura de insumos pesados, herramientas de extracción, repuestos e instrumentación técnica para operaciones mineras a gran escala.</p>
+                </div>
             </div>
+
             <div class="card">
-                <h3>Logística Internacional</h3>
-                <p>Gestión de cadena de suministro y comercio exterior conectando mercados estratégicos en América y Europa.</p>
+                <img src="https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?auto=format&fit=crop&w=700&q=80" alt="Insumos Químicos" class="card-img">
+                <div class="card-body">
+                    <h3>Industria Química</h3>
+                    <p>Suministro de reactivos, compuestos industriales, polímeros y materia prima bajo estrictas normas internacionales de manejo y seguridad.</p>
+                </div>
             </div>
+
             <div class="card">
-                <h3>Comercialización Directa</h3>
-                <p>Emisión y respaldo de ofertas corporativas (FCO) bajo estándares internacionales de transparencia e inmutabilidad.</p>
+                <img src="https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=700&q=80" alt="Industria Petrolera" class="card-img">
+                <div class="card-body">
+                    <h3>Petróleo y Gas</h3>
+                    <p>Logística y soluciones para el sector hidrocarburos, transporte marítimo especializado y apoyo a la cadena de valor de refinación y perforación.</p>
+                </div>
             </div>
         </div>
     </div>
 
-    <div class="container" id="contacto" style="background-color: var(--white); border-radius: 8px; margin-bottom: 4rem;">
+    <div class="container" id="contacto" style="background-color: var(--white); border-radius: 8px; margin-bottom: 4rem; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
         <h2 class="section-title">Contacto Corporativo</h2>
         <div style="text-align: center; max-width: 600px; margin: 0 auto;">
-            <p><strong>Dirección USA:</strong> 8813 W 35TH AV, Hialeah, FL 33018, USA</p>
-            <p><strong>Correo Electrónico:</strong> <a href="mailto:manuelf@minerquimsupply.com" style="color: var(--primary);">logistica@minerquim.com</a></p>
-            <p style="margin-top: 1rem;"><strong> CEO:</strong> Manuel A. Fernandes M.</p>
+            <p style="font-size: 1.1rem; margin-bottom: 0.5rem;"><strong>Dirección Principal:</strong> 8813 W 35TH AV, Hialeah, FL 33018, USA</p>
+            <p style="font-size: 1.1rem; margin-bottom: 0.5rem;"><strong>Correo Oficial:</strong> <a href="mailto:manuelf@minerquimsupply.com" style="color: var(--primary); font-weight: bold;">manuelf@minerquimsupply.com</a></p>
+            <p style="font-size: 1.1rem; margin-top: 1rem;"><strong>Presidente & CEO:</strong> Manuel A. Fernandes M.</p>
         </div>
     </div>
 
     <footer>
         <p>&copy; 2026 MINERQUIM I SUPPLY LLC. Todos los derechos reservados.</p>
-        <p><small><a href="/verify/">Portal de Verificación Documental</a></small></p>
+        <p><small><a href="/verify/">Portal de Verificación Documental (QR)</a></small></p>
     </footer>
 
 </body>
