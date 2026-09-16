@@ -1,7 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MINERQUIM I SUPPLY LLC | Minería, Química y Soluciones Petroleras</title>
+    <style>
+        :root {
+            --primary: #081B2E;
+            --secondary: #132E48;
+            --accent: #00AEFF;
+            --accent-glow: #00E5FF;
+            --text-dark: #2A2F45;
+            --bg-light: #F4F7FA;
+            --white: #FFFFFF;
+        }
 
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            color: var(--text-dark);
+            background-color: var(--bg-light);
+            line-height: 1.6;
+        }
+
+        header {
+            background-color: var(--primary);
+            color: var(--white);
+            padding: 0.8rem 5%;
+            position: sticky;
             top: 0;
             z-index: 1000;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            border-bottom: 2px solid var(--accent);
         }
 
         .nav-container {
@@ -12,29 +47,43 @@
             margin: 0 auto;
         }
 
-        .logo {
-            font-size: 1.4rem;
+        .brand-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .header-logo-img {
+            height: 50px;
+            width: auto;
+            border-radius: 4px;
+            box-shadow: 0 2px 6px rgba(0,174,255,0.3);
+        }
+
+        .logo-text {
+            font-size: 1.3rem;
             font-weight: 700;
             letter-spacing: 1px;
             color: var(--white);
         }
 
-        .logo span {
+        .logo-text span {
             color: var(--accent);
         }
 
         .sub-logo {
-            font-size: 0.75rem;
-            opacity: 0.8;
+            font-size: 0.7rem;
+            opacity: 0.85;
             font-weight: 400;
             display: block;
+            color: #A0C4DF;
         }
 
         nav a {
             color: var(--white);
             text-decoration: none;
             margin-left: 1.5rem;
-            font-weight: 500;
+            font-weight: 600;
             transition: color 0.3s;
         }
 
@@ -43,10 +92,10 @@
         }
 
         .hero {
-            background: linear-gradient(135deg, rgba(10, 37, 64, 0.88), rgba(15, 23, 42, 0.88)), 
+            background: linear-gradient(135deg, rgba(8, 27, 46, 0.9), rgba(19, 46, 72, 0.88)), 
                         url('https://images.unsplash.com/photo-1578575437130-527eed3abbec?auto=format&fit=crop&w=1400&q=80') center/cover;
             color: var(--white);
-            padding: 6.5rem 5%;
+            padding: 5.5rem 5%;
             text-align: center;
         }
 
@@ -59,6 +108,7 @@
             font-size: 2.8rem;
             margin-bottom: 1rem;
             font-weight: 700;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
         }
 
         .hero p {
@@ -69,18 +119,19 @@
 
         .btn {
             display: inline-block;
-            background-color: var(--accent);
-            color: var(--primary);
-            padding: 0.82rem 2.2rem;
+            background: linear-gradient(135deg, var(--accent), #0088CC);
+            color: var(--white);
+            padding: 0.85rem 2.2rem;
             border-radius: 5px;
             text-decoration: none;
             font-weight: 700;
-            transition: transform 0.2s, background-color 0.3s;
+            box-shadow: 0 4px 12px rgba(0, 174, 255, 0.4);
+            transition: transform 0.2s, box-shadow 0.3s;
         }
 
         .btn:hover {
             transform: translateY(-2px);
-            background-color: #00bc9d;
+            box-shadow: 0 6px 18px rgba(0, 229, 255, 0.6);
         }
 
         .container {
@@ -100,16 +151,63 @@
         .section-title::after {
             content: '';
             display: block;
-            width: 60px;
-            height: 3px;
+            width: 70px;
+            height: 4px;
             background-color: var(--accent);
             margin: 0.5rem auto 0;
+            border-radius: 2px;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2.5rem;
+            align-items: center;
         }
 
         .grid-3 {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 2rem;
+        }
+
+        .about-image-container {
+            text-align: center;
+        }
+
+        .about-logo-main {
+            max-width: 320px;
+            width: 100%;
+            height: auto;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+            border: 1px solid #C0D8EC;
+        }
+
+        .about-box {
+            background-color: var(--white);
+            border-radius: 8px;
+            padding: 2.5rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+            border-left: 5px solid var(--accent);
+        }
+
+        .lang-block {
+            margin-bottom: 1.8rem;
+        }
+
+        .lang-block:last-child {
+            margin-bottom: 0;
+        }
+
+        .lang-flag {
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: var(--accent);
+            text-transform: uppercase;
+            display: block;
+            margin-bottom: 0.4rem;
         }
 
         .card {
@@ -142,14 +240,14 @@
         }
 
         .reg-badge {
-            background-color: #e2e8f0;
+            background-color: #E2ECF5;
             padding: 0.3rem 0.8rem;
             border-radius: 4px;
-            font-size: 0.9rem;
-            color: #475569;
+            font-size: 0.88rem;
+            color: #132E48;
             display: inline-block;
             margin-bottom: 1rem;
-            font-weight: 600;
+            font-weight: 700;
         }
 
         footer {
@@ -177,13 +275,16 @@
 
     <header>
         <div class="nav-container">
-            <div>
-                <div class="logo">MINERQUIM <span>I SUPPLY</span> LLC</div>
-                <span class="sub-logo">U.S. Industrial, Mining & Oil Logistics</span>
+            <div class="brand-header">
+                <img src="/logo.jpg" alt="Logo MINERQUIM I SUPPLY LLC" class="header-logo-img">
+                <div>
+                    <div class="logo-text">MINERQUIM <span>I SUPPLY</span> LLC</div>
+                    <span class="sub-logo">U.S. Industrial & Mining Logistics</span>
+                </div>
             </div>
             <nav>
-                <a href="#nosotros">Nosotros</a>
-                <a href="#servicios">Suministros</a>
+                <a href="#quienes-somos">Quiénes Somos / About Us</a>
+                <a href="#servicios">Sectores</a>
                 <a href="#contacto">Contacto</a>
                 <a href="/verify/" style="color: var(--accent);">Verificar Documento</a>
             </nav>
@@ -198,19 +299,45 @@
         </div>
     </section>
 
-    <div class="container" id="nosotros">
-        <h2 class="section-title">Nuestra Empresa</h2>
-        <div style="text-align: center; max-width: 850px; margin: 0 auto 3rem;">
-            <span class="reg-badge">Florida Reg. L24000306713</span>
-            <p style="font-size: 1.1rem;"><strong>MINERQUIM I SUPPLY LLC</strong> es una entidad corporativa registrada en EE. UU., especializada en la procura, comercio exterior y distribución de reactivos químicos, insumos mineros e infraestructura para la industria de los hidrocarburos y sectores extractivos.</p>
-        </div>
+    <div class="container" id="quienes-somos">
+        <h2 class="section-title">Quiénes Somos / About Us</h2>
+        
+        <div class="grid-2">
+            <div class="about-image-container">
+                <img src="/logo.jpg" alt="MINERQUIM I SUPPLY LLC Logo Oficial" class="about-logo-main">
+            </div>
 
-        <h2 class="section-title" id="servicios">Sectores Estratégicos</h2>
+            <div class="about-box">
+                <span class="reg-badge">Florida Reg. L24000306713</span>
+
+                <!-- Bloque Español -->
+                <div class="lang-block">
+                    <span class="lang-flag"> ESPAÑOL</span>
+                    <h3 style="color: var(--primary); margin-bottom: 0.5rem; font-size: 1.3rem;">Liderazgo e Integridad Operativa</h3>
+                    <p style="margin-bottom: 0.5rem;"><strong>MINERQUIM I SUPPLY LLC</strong> es una entidad corporativa constituida en el Estado de Florida, Estados Unidos, especializada en la procura estratégica, comercio internacional y suministro de materias primas e insumos técnicos para la industria pesada.</p>
+                    <p>Nuestra infraestructura garantiza trazabilidad, inmutabilidad documental, respaldo contractual e integración transparente en la cadena global de logística minera, química y de hidrocarburos.</p>
+                </div>
+
+                <hr style="border: 0; border-top: 1px solid #E2ECF5; margin: 1.5rem 0;">
+
+                <!-- Bloque Inglés -->
+                <div class="lang-block">
+                    <span class="lang-flag"> ENGLISH</span>
+                    <h3 style="color: var(--primary); margin-bottom: 0.5rem; font-size: 1.3rem;">Leadership & Operational Integrity</h3>
+                    <p style="margin-bottom: 0.5rem;"><strong>MINERQUIM I SUPPLY LLC</strong> is a U.S. corporate entity registered in the State of Florida, specializing in strategic procurement, international trade, and the supply of raw materials and technical equipment for heavy industry.</p>
+                    <p>Our infrastructure ensures document traceability, contractual compliance, and seamless integration into global supply chains across the mining, chemical, and energy sectors.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container" id="servicios" style="padding-top: 1rem;">
+        <h2 class="section-title">Sectores Estratégicos / Core Sectors</h2>
         <div class="grid-3">
             <div class="card">
                 <img src="https://images.unsplash.com/photo-1579548122080-c35fd6820ecb?auto=format&fit=crop&w=700&q=80" alt="Suministros de Minería" class="card-img">
                 <div class="card-body">
-                    <h3>Sector Minero</h3>
+                    <h3>Sector Minero / Mining</h3>
                     <p>Procura de insumos pesados, herramientas de extracción, repuestos e instrumentación técnica para operaciones mineras a gran escala.</p>
                 </div>
             </div>
@@ -218,7 +345,7 @@
             <div class="card">
                 <img src="https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?auto=format&fit=crop&w=700&q=80" alt="Insumos Químicos" class="card-img">
                 <div class="card-body">
-                    <h3>Industria Química</h3>
+                    <h3>Industria Química / Chemical</h3>
                     <p>Suministro de reactivos, compuestos industriales, polímeros y materia prima bajo estrictas normas internacionales de manejo y seguridad.</p>
                 </div>
             </div>
@@ -226,7 +353,7 @@
             <div class="card">
                 <img src="https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=700&q=80" alt="Industria Petrolera" class="card-img">
                 <div class="card-body">
-                    <h3>Petróleo y Gas</h3>
+                    <h3>Petróleo y Gas / Oil & Gas</h3>
                     <p>Logística y soluciones para el sector hidrocarburos, transporte marítimo especializado y apoyo a la cadena de valor de refinación y perforación.</p>
                 </div>
             </div>
@@ -234,16 +361,16 @@
     </div>
 
     <div class="container" id="contacto" style="background-color: var(--white); border-radius: 8px; margin-bottom: 4rem; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
-        <h2 class="section-title">Contacto Corporativo</h2>
+        <h2 class="section-title">Contacto Corporativo / Contact</h2>
         <div style="text-align: center; max-width: 600px; margin: 0 auto;">
-            <p style="font-size: 1.1rem; margin-bottom: 0.5rem;"><strong>Dirección Principal:</strong> 8813 W 35TH AV, Hialeah, FL 33018, USA</p>
-            <p style="font-size: 1.1rem; margin-bottom: 0.5rem;"><strong>Correo Oficial:</strong> <a href="mailto:manuelf@minerquimsupply.com" style="color: var(--primary); font-weight: bold;">manuelf@minerquimsupply.com</a></p>
+            <p style="font-size: 1.1rem; margin-bottom: 0.5rem;"><strong>Dirección Principal / Address:</strong> 8813 W 35TH AV, Hialeah, FL 33018, USA</p>
+            <p style="font-size: 1.1rem; margin-bottom: 0.5rem;"><strong>Correo Oficial / Email:</strong> <a href="mailto:manuelf@minerquimsupply.com" style="color: var(--primary); font-weight: bold;">manuelf@minerquimsupply.com</a></p>
             <p style="font-size: 1.1rem; margin-top: 1rem;"><strong>Presidente & CEO:</strong> Manuel A. Fernandes M.</p>
         </div>
     </div>
 
     <footer>
-        <p>&copy; 2026 MINERQUIM I SUPPLY LLC. Todos los derechos reservados.</p>
+        <p>&copy; 2026 MINERQUIM I SUPPLY LLC. Todos los derechos reservados / All rights reserved.</p>
         <p><small><a href="/verify/">Portal de Verificación Documental (QR)</a></small></p>
     </footer>
 
