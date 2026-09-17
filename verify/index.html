@@ -196,42 +196,43 @@
     </div>
 
     <script>
-        const SHEET_ID = '1geF3G68AXFlliyBv1IHITP1A6iEJxT0s38a0e6IS6sE'; 
+        const SHEET_ID = '1geF3G68AXFlliyBv1IHITP1A6iEJxT0s38a0e6IS6sE';
         const SHEET_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json`;
 
         const urlParams = new URLSearchParams(window.location.search);
-        const fcoParam = urlParams.get('fco') || 'FCO-2026-MQ-001';
+        const fcoParam = (urlParams.get('fco') || 'FCO-2026-MQ-001').trim();
 
-        function getCellValue(cell) {
+        function cleanVal(cell) {
             if (!cell) return '--';
-            if (cell.f !== undefined && cell.f !== null) return cell.f;
-            if (cell.v !== undefined && cell.v !== null) return cell.v;
+            if (cell.f) return cell.f;
+            if (cell.v !== undefined && cell.v !== null) return String(cell.v);
             return '--';
         }
 
         fetch(SHEET_URL)
             .then(res => res.text())
-            .then(data => {
-                const jsonText = data.substring(data.indexOf('{'), data.lastIndexOf('}') + 1);
-                const json = JSON.parse(jsonText);
+            .then(txt => {
+                const start = txt.indexOf('{');
+                const end = txt.lastIndexOf('}') + 1;
+                const json = JSON.parse(txt.substring(start, end));
                 const rows = json.table.rows;
-                
+
                 let match = rows.find(r => {
                     if (!r.c || !r.c[0]) return false;
-                    let val = getCellValue(r.c[0]);
-                    return String(val).trim().toUpperCase() === String(fcoParam).trim().toUpperCase();
+                    const codeVal = cleanVal(r.c[0]).trim().toUpperCase();
+                    return codeVal === fcoParam.toUpperCase();
                 });
 
                 if (match && match.c) {
-                    document.getElementById('val-codigo').innerText = getCellValue(match.c[0]);
-                    document.getElementById('val-fecha').innerText = getCellValue(match.c[1]);
-                    document.getElementById('val-cliente').innerText = getCellValue(match.c[2]);
-                    document.getElementById('val-producto').innerText = getCellValue(match.c[3]);
-                    document.getElementById('val-monto').innerText = getCellValue(match.c[4]);
-                    document.getElementById('val-estatus').innerText = getCellValue(match.c[6]);
+                    document.getElementById('val-codigo').innerText = cleanVal(match.c[0]);
+                    document.getElementById('val-fecha').innerText = cleanVal(match.c[1]);
+                    document.getElementById('val-cliente').innerText = cleanVal(match.c[2]);
+                    document.getElementById('val-producto').innerText = cleanVal(match.c[3]);
+                    document.getElementById('val-monto').innerText = cleanVal(match.c[4]);
+                    document.getElementById('val-estatus').innerText = cleanVal(match.c[6]);
                 } else {
                     document.getElementById('val-codigo').innerText = fcoParam;
-                    document.getElementById('status-text').innerText = 'DOCUMENTO NO ENCONTRADO O PENDIENTE DE REGISTRO';
+                    document.getElementById('status-text').innerText = 'DOCUMENTO NO REGISTRADO O PENDIENTE';
                     document.getElementById('status-icon').innerText = '✕';
                     document.getElementById('banner').style.backgroundColor = '#FEE2E2';
                     document.getElementById('banner').style.color = '#991B1B';
@@ -241,9 +242,9 @@
                 }
             })
             .catch(err => {
-                console.error('Error al consultar Google Sheets:', err);
+                console.error(err);
                 document.getElementById('val-codigo').innerText = fcoParam;
-                document.getElementById('status-text').innerText = 'ERROR DE CONEXIÓN CON EL REGISTRO';
+                document.getElementById('status-text').innerText = 'ERROR DE CONEXIÓN AL REGISTRO';
             });
 
         new QRCode(document.getElementById("qrcode"), {
