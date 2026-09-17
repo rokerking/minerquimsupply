@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Verificación Documental | MINERQUIM I SUPPLY LLC</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         :root {
             --primary: #081B2E;
@@ -16,144 +17,121 @@
             --success-bg: #ECFDF5;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; }
+        body { background-color: var(--bg-light); color: var(--text-dark); line-height: 1.6; padding: 2rem 1rem; }
+        
+        .verify-card { 
+            max-width: 650px; 
+            margin: 0 auto; 
+            background: var(--white); 
+            border-radius: 12px; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1); 
+            overflow: hidden; 
+            border: 1px solid #E2ECF5; 
         }
 
-        body {
-            background-color: var(--bg-light);
-            color: var(--text-dark);
-            line-height: 1.6;
-            padding: 2rem 1rem;
+        .verify-header { 
+            background: var(--primary); 
+            color: var(--white); 
+            padding: 2rem; 
+            text-align: center; 
+            border-bottom: 3px solid var(--accent); 
         }
 
-        .verify-card {
-            max-width: 650px;
-            margin: 0 auto;
-            background-color: var(--white);
-            border-radius: 12px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-            overflow: hidden;
-            border: 1px solid #E2ECF5;
+        .verify-logo { 
+            max-width: 130px; 
+            height: auto; 
+            margin-bottom: 1rem; 
+            border-radius: 6px; 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3); 
         }
 
-        .verify-header {
-            background-color: var(--primary);
-            color: var(--white);
-            padding: 2rem;
-            text-align: center;
-            border-bottom: 3px solid var(--accent);
+        .verify-header h1 { font-size: 1.4rem; letter-spacing: 1px; }
+        .verify-header p { font-size: 0.85rem; color: #A0C4DF; margin-top: 0.2rem; }
+
+        .status-banner { 
+            background-color: var(--success-bg); 
+            color: #065F46; 
+            border-left: 5px solid var(--success); 
+            padding: 1rem 1.5rem; 
+            display: flex; 
+            align-items: center; 
+            gap: 12px; 
+            font-weight: 700; 
+            font-size: 1.05rem; 
         }
 
-        .verify-logo {
-            max-width: 130px;
-            height: auto;
-            margin-bottom: 1rem;
-            border-radius: 6px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        .status-icon { 
+            background: var(--success); 
+            color: var(--white); 
+            width: 28px; 
+            height: 28px; 
+            border-radius: 50%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-size: 0.9rem; 
         }
 
-        .verify-header h1 {
-            font-size: 1.4rem;
-            letter-spacing: 1px;
+        .verify-body { padding: 2rem; }
+        .doc-title { font-size: 1.2rem; color: var(--primary); margin-bottom: 1.5rem; border-bottom: 2px solid #E2ECF5; padding-bottom: 0.5rem; }
+
+        .data-grid { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 1.2rem; 
+            margin-bottom: 1.5rem; 
         }
 
-        .verify-header p {
-            font-size: 0.85rem;
-            color: #A0C4DF;
-            margin-top: 0.2rem;
+        .data-item { 
+            background: #F8FAFC; 
+            padding: 0.8rem 1rem; 
+            border-radius: 6px; 
+            border: 1px solid #E2E8F0; 
         }
 
-        .status-banner {
-            background-color: var(--success-bg);
-            color: #065F46;
-            border-left: 5px solid var(--success);
-            padding: 1rem 1.5rem;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-weight: 700;
-            font-size: 1.05rem;
+        .data-label { 
+            font-size: 0.75rem; 
+            text-transform: uppercase; 
+            color: #64748B; 
+            font-weight: 700; 
+            display: block; 
+            margin-bottom: 0.2rem; 
         }
 
-        .status-icon {
-            background-color: var(--success);
-            color: var(--white);
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.9rem;
+        .data-value { font-size: 0.95rem; color: var(--primary); font-weight: 600; }
+        .full-width { grid-column: 1 / -1; }
+
+        .qr-section { 
+            text-align: center; 
+            background: #F8FAFC; 
+            padding: 1.5rem; 
+            border-radius: 8px; 
+            border: 1px dashed #CBD5E1; 
+            margin-top: 1.5rem; 
         }
 
-        .verify-body {
-            padding: 2rem;
+        #qrcode { 
+            display: inline-block; 
+            margin: 0.8rem auto; 
+            padding: 8px; 
+            background: white; 
+            border-radius: 4px; 
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08); 
         }
 
-        .doc-title {
-            font-size: 1.2rem;
-            color: var(--primary);
-            margin-bottom: 1.5rem;
-            border-bottom: 2px solid #E2ECF5;
-            padding-bottom: 0.5rem;
+        .verify-footer { 
+            background: #F1F5F9; 
+            padding: 1.2rem; 
+            text-align: center; 
+            font-size: 0.8rem; 
+            color: #64748B; 
+            border-top: 1px solid #E2E8F0; 
         }
 
-        .data-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1.2rem;
-            margin-bottom: 2rem;
-        }
+        .verify-footer a { color: var(--accent); text-decoration: none; font-weight: 600; }
 
-        .data-item {
-            background-color: #F8FAFC;
-            padding: 0.8rem 1rem;
-            border-radius: 6px;
-            border: 1px solid #E2E8F0;
-        }
-
-        .data-label {
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            color: #64748B;
-            font-weight: 700;
-            display: block;
-            margin-bottom: 0.2rem;
-        }
-
-        .data-value {
-            font-size: 0.95rem;
-            color: var(--primary);
-            font-weight: 600;
-        }
-
-        .full-width {
-            grid-column: 1 / -1;
-        }
-
-        .verify-footer {
-            background-color: #F1F5F9;
-            padding: 1.2rem;
-            text-align: center;
-            font-size: 0.8rem;
-            color: #64748B;
-            border-top: 1px solid #E2E8F0;
-        }
-
-        .verify-footer a {
-            color: var(--accent);
-            text-decoration: none;
-            font-weight: 600;
-        }
-
-        @media (max-width: 500px) {
-            .data-grid { grid-template-columns: 1fr; }
-        }
+        @media (max-width: 500px) { .data-grid { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
@@ -165,9 +143,9 @@
             <p>SISTEMA DE AUTENTICIDAD DOCUMENTAL EN LÍNEA</p>
         </div>
 
-        <div class="status-banner">
-            <div class="status-icon">✓</div>
-            <div>DOCUMENTO OFICIAL AUTÉNTICO Y REGISTRADO</div>
+        <div class="status-banner" id="banner">
+            <div class="status-icon" id="status-icon">✓</div>
+            <div id="status-text">DOCUMENTO OFICIAL AUTÉNTICO Y REGISTRADO</div>
         </div>
 
         <div class="verify-body">
@@ -176,37 +154,38 @@
             <div class="data-grid">
                 <div class="data-item full-width">
                     <span class="data-label">Código Único de Verificación</span>
-                    <span class="data-value" style="color: var(--accent); font-family: monospace; font-size: 1.1rem;">FCO-2026-MQ-001</span>
+                    <span class="data-value" id="val-codigo" style="color: var(--accent); font-family: monospace; font-size: 1.1rem;">Cargando...</span>
                 </div>
-
                 <div class="data-item">
-                    <span class="data-label">Entidad Emisora</span>
-                    <span class="data-value">MINERQUIM I SUPPLY LLC</span>
+                    <span class="data-label">Fecha de Emisión</span>
+                    <span class="data-value" id="val-fecha">--</span>
                 </div>
-
                 <div class="data-item">
-                    <span class="data-label">Registro Estatal (USA)</span>
-                    <span class="data-value">Florida Reg. L24000306713</span>
+                    <span class="data-label">Cliente / Empresa</span>
+                    <span class="data-value" id="val-cliente">--</span>
                 </div>
-
+                <div class="data-item full-width">
+                    <span class="data-label">Producto / Suministro</span>
+                    <span class="data-value" id="val-producto">--</span>
+                </div>
                 <div class="data-item">
-                    <span class="data-label">Representante Legal</span>
-                    <span class="data-value">Manuel A. Fernandes M. (CEO)</span>
+                    <span class="data-label">Monto Total (USD)</span>
+                    <span class="data-value" id="val-monto">--</span>
                 </div>
-
                 <div class="data-item">
                     <span class="data-label">Estatus Documental</span>
-                    <span class="data-value" style="color: var(--success);">VIGENTE / VERIFICADO</span>
-                </div>
-
-                <div class="data-item full-width">
-                    <span class="data-label">Propósito Comercial</span>
-                    <span class="data-value">Suministro e Insumos Industriales, Mineros y Petroleros.</span>
+                    <span class="data-value" id="val-estatus" style="color: var(--success);">--</span>
                 </div>
             </div>
 
+            <div class="qr-section">
+                <span class="data-label">Código QR de Autenticidad Directa</span>
+                <div id="qrcode"></div>
+                <p style="font-size: 0.78rem; color: #64748B;">Escanee este código desde cualquier dispositivo móvil para validar esta ficha oficial en tiempo real.</p>
+            </div>
+
             <div style="text-align: center; margin-top: 1.5rem;">
-                <a href="/" style="display: inline-block; background-color: var(--primary); color: var(--white); padding: 0.6rem 1.5rem; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 0.9rem;">Volver al Portal Principal</a>
+                <a href="/" style="display: inline-block; background-color: var(--primary); color: var(--white); padding: 0.6rem 1.5rem; border-radius: 6px; text-decoration: none; font-weight: 600;">Volver al Portal Principal</a>
             </div>
         </div>
 
@@ -215,3 +194,66 @@
             <p>Contacto de Seguridad: <a href="mailto:manuelf@minerquimsupply.com">manuelf@minerquimsupply.com</a></p>
         </div>
     </div>
+
+    <script>
+        const SHEET_ID = '1geF3G68AXFlliyBv1IHITP1A6iEJxT0s38a0e6IS6sE'; 
+        const SHEET_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json`;
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const fcoParam = urlParams.get('fco') || 'FCO-2026-MQ-001';
+
+        function getCellValue(cell) {
+            if (!cell) return '--';
+            if (cell.f !== undefined && cell.f !== null) return cell.f;
+            if (cell.v !== undefined && cell.v !== null) return cell.v;
+            return '--';
+        }
+
+        fetch(SHEET_URL)
+            .then(res => res.text())
+            .then(data => {
+                const jsonText = data.substring(data.indexOf('{'), data.lastIndexOf('}') + 1);
+                const json = JSON.parse(jsonText);
+                const rows = json.table.rows;
+                
+                let match = rows.find(r => {
+                    if (!r.c || !r.c[0]) return false;
+                    let val = getCellValue(r.c[0]);
+                    return String(val).trim().toUpperCase() === String(fcoParam).trim().toUpperCase();
+                });
+
+                if (match && match.c) {
+                    document.getElementById('val-codigo').innerText = getCellValue(match.c[0]);
+                    document.getElementById('val-fecha').innerText = getCellValue(match.c[1]);
+                    document.getElementById('val-cliente').innerText = getCellValue(match.c[2]);
+                    document.getElementById('val-producto').innerText = getCellValue(match.c[3]);
+                    document.getElementById('val-monto').innerText = getCellValue(match.c[4]);
+                    document.getElementById('val-estatus').innerText = getCellValue(match.c[6]);
+                } else {
+                    document.getElementById('val-codigo').innerText = fcoParam;
+                    document.getElementById('status-text').innerText = 'DOCUMENTO NO ENCONTRADO O PENDIENTE DE REGISTRO';
+                    document.getElementById('status-icon').innerText = '✕';
+                    document.getElementById('banner').style.backgroundColor = '#FEE2E2';
+                    document.getElementById('banner').style.color = '#991B1B';
+                    document.getElementById('banner').style.borderLeftColor = '#EF4444';
+                    document.getElementById('val-estatus').innerText = 'NO REGISTRADO';
+                    document.getElementById('val-estatus').style.color = '#EF4444';
+                }
+            })
+            .catch(err => {
+                console.error('Error al consultar Google Sheets:', err);
+                document.getElementById('val-codigo').innerText = fcoParam;
+                document.getElementById('status-text').innerText = 'ERROR DE CONEXIÓN CON EL REGISTRO';
+            });
+
+        new QRCode(document.getElementById("qrcode"), {
+            text: window.location.href,
+            width: 128,
+            height: 128,
+            colorDark : "#081B2E",
+            colorLight : "#ffffff",
+            correctLevel : QRCode.CorrectLevel.H
+        });
+    </script>
+</body>
+</html>
