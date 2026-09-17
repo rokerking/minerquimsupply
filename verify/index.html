@@ -197,40 +197,51 @@
 
     <script>
         const SHEET_ID = '1geF3G68AXFlliyBv1IHITP1A6iEJxT0s38a0e6IS6sE';
-        const GVIZ_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json`;
+        // URL de exportación CSV limpia
+        const CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv`;
 
         const urlParams = new URLSearchParams(window.location.search);
-        const fcoParam = (urlParams.get('fco') || 'FCO-2026-MQ-001').trim();
+        const fcoParam = (urlParams.get('fco') || 'FCO-2026-MQ-001').trim().toUpperCase();
 
-        function getCellText(cell) {
-            if (!cell) return '--';
-            if (cell.f) return cell.f;
-            if (cell.v !== undefined && cell.v !== null) return String(cell.v);
-            return '--';
+        function parseCSVLine(text) {
+            let result = [];
+            let cell = '';
+            let inQuotes = false;
+            for (let i = 0; i < text.length; i++) {
+                let c = text[i];
+                if (c === '"') { inQuotes = !inQuotes; }
+                else if (c === ',' && !inQuotes) { result.push(cell.trim()); cell = ''; }
+                else { cell += c; }
+            }
+            result.push(cell.trim());
+            return result;
         }
 
-        fetch(GVIZ_URL)
+        fetch(CSV_URL)
             .then(res => res.text())
-            .then(data => {
-                const rawJson = JSON.parse(data.substring(47, data.length - 2));
-                const rows = rawJson.table.rows;
+            .then(csvText => {
+                const lines = csvText.split('\n');
+                let foundRow = null;
 
-                let match = rows.find(r => {
-                    if (!r || !r.c || !r.c[0]) return false;
-                    const code = getCellText(r.c[0]).trim().toUpperCase();
-                    return code === fcoParam.toUpperCase();
-                });
+                for (let i = 1; i < lines.length; i++) {
+                    if (!lines[i].trim()) continue;
+                    let row = parseCSVLine(lines[i]);
+                    if (row[0] && row[0].replace(/"/g, '').trim().toUpperCase() === fcoParam) {
+                        foundRow = row;
+                        break;
+                    }
+                }
 
-                if (match && match.c) {
-                    document.getElementById('val-codigo').innerText = getCellText(match.c[0]);
-                    document.getElementById('val-fecha').innerText = getCellText(match.c[1]);
-                    document.getElementById('val-cliente').innerText = getCellText(match.c[2]);
-                    document.getElementById('val-producto').innerText = getCellText(match.c[3]);
-                    document.getElementById('val-monto').innerText = getCellText(match.c[4]);
-                    document.getElementById('val-estatus').innerText = getCellText(match.c[6]);
+                if (foundRow) {
+                    document.getElementById('val-codigo').innerText = foundRow[0] ? foundRow[0].replace(/"/g, '') : fcoParam;
+                    document.getElementById('val-fecha').innerText = foundRow[1] ? foundRow[1].replace(/"/g, '') : '--';
+                    document.getElementById('val-cliente').innerText = foundRow[2] ? foundRow[2].replace(/"/g, '') : '--';
+                    document.getElementById('val-producto').innerText = foundRow[3] ? foundRow[3].replace(/"/g, '') : '--';
+                    document.getElementById('val-monto').innerText = foundRow[4] ? foundRow[4].replace(/"/g, '') : '--';
+                    document.getElementById('val-estatus').innerText = foundRow[6] ? foundRow[6].replace(/"/g, '') : 'VIGENTE';
                 } else {
                     document.getElementById('val-codigo').innerText = fcoParam;
-                    document.getElementById('status-text').innerText = 'DOCUMENTO NO REGISTRADO O PENDIENTE';
+                    document.getElementById('status-text').innerText = 'DOCUMENTO NO ENCONTRADO O PENDIENTE DE REGISTRO';
                     document.getElementById('status-icon').innerText = '✕';
                     document.getElementById('banner').style.backgroundColor = '#FEE2E2';
                     document.getElementById('banner').style.color = '#991B1B';
@@ -242,7 +253,7 @@
             .catch(err => {
                 console.error(err);
                 document.getElementById('val-codigo').innerText = fcoParam;
-                document.getElementById('status-text').innerText = 'ERROR DE CONEXIÓN CON EL REGISTRO';
+                document.getElementById('status-text').innerText = 'ERROR DE CONEXIÓN AL REGISTRO';
             });
 
         new QRCode(document.getElementById("qrcode"), {
