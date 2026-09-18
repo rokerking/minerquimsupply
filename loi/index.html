@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solicitud de Oferta Corporativa (LOI) | MINERQUIM I SUPPLY LLC</title>
+    <style>
+        :root {
+            --primary: #081B2E;
+            --secondary: #132E48;
+            --accent: #00AEFF;
+            --text-dark: #2A2F45;
+            --bg-light: #F4F7FA;
+            --white: #FFFFFF;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; }
+        body { background-color: var(--bg-light); color: var(--text-dark); line-height: 1.6; padding: 2rem 1rem; }
+        
+        .form-card { 
+            max-width: 700px; 
+            margin: 0 auto; 
+            background: var(--white); 
+            border-radius: 12px; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1); 
+            overflow: hidden; 
+            border: 1px solid #E2ECF5; 
+        }
+
+        .form-header { 
+            background: var(--primary); 
+            color: var(--white); 
+            padding: 2rem; 
+            text-align: center; 
+            border-bottom: 3px solid var(--accent); 
+        }
+
+        .form-logo { 
+            max-width: 120px; 
+            height: auto; 
+            margin-bottom: 1rem; 
+            border-radius: 6px; 
+        }
+
+        .form-header h1 { font-size: 1.3rem; letter-spacing: 1px; }
+        .form-header p { font-size: 0.85rem; color: #A0C4DF; margin-top: 0.2rem; }
+
+        .form-body { padding: 2rem; }
+
+        .section-title { 
+            font-size: 1.05rem; 
+            color: var(--primary); 
+            margin-bottom: 1rem; 
+            margin-top: 1rem;
+            border-bottom: 2px solid #E2ECF5; 
+            padding-bottom: 0.4rem; 
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-grid { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 1rem; 
+        }
+
+        .form-group { margin-bottom: 1rem; }
+        .full-width { grid-column: 1 / -1; }
+
+        label { 
+            font-size: 0.8rem; 
+            text-transform: uppercase; 
+            color: #475569; 
+            font-weight: 700; 
+            display: block; 
+            margin-bottom: 0.3rem; 
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #CBD5E1;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            outline: none;
+            background: #F8FAFC;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 2px rgba(0, 174, 255, 0.2);
+            background: #FFFFFF;
+        }
+
+        .btn-submit {
+            width: 100%;
+            background: var(--primary);
+            color: var(--white);
+            border: none;
+            padding: 1rem;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-top: 1rem;
+        }
+
+        .btn-submit:hover {
+            background: var(--secondary);
+        }
+
+        .form-footer { 
+            background: #F1F5F9; 
+            padding: 1.2rem; 
+            text-align: center; 
+            font-size: 0.8rem; 
+            color: #64748B; 
+            border-top: 1px solid #E2E8F0; 
+        }
+
+        @media (max-width: 500px) { .form-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+
+    <div class="form-card">
+        <div class="form-header">
+            <img src="/logo.jpg" alt="Logo MINERQUIM I SUPPLY LLC" class="form-logo">
+            <h1>MINERQUIM I SUPPLY LLC</h1>
+            <p>LETTER OF INTENT (LOI) / CARTA DE INTENCIÓN DE COMPRA</p>
+        </div>
+
+        <div class="form-body">
+            <form action="https://formspree.io/f/myezyrny" method="POST">
+                
+                <h2 class="section-title">1. Información del Comprador</h2>
+                <div class="form-grid">
+                    <div class="form-group full-width">
+                        <label>Razón Social / Empresa Compradora *</label>
+                        <input type="text" name="Empresa" required placeholder="Ej. Soluciones Petroleras S.A.">
+                    </div>
+                    <div class="form-group">
+                        <label>Nombre del Representante *</label>
+                        <input type="text" name="Representante" required placeholder="Nombre completo">
+                    </div>
+                    <div class="form-group">
+                        <label>Cargo Ejecutivo *</label>
+                        <input type="text" name="Cargo" required placeholder="Ej. Gerente de Compras">
+                    </div>
+                    <div class="form-group">
+                        <label>Correo Electrónico Corporativo *</label>
+                        <input type="email" name="Email" required placeholder="correo@empresa.com">
+                    </div>
+                    <div class="form-group">
+                        <label>Teléfono / WhatsApp *</label>
+                        <input type="tel" name="Telefono" required placeholder="+1 234 567 8900">
+                    </div>
+                    <div class="form-group full-width">
+                        <label>País de Registro / Operación *</label>
+                        <input type="text" name="Pais" required placeholder="Ej. Colombia / EE.UU. / España">
+                    </div>
+                </div>
+
+                <h2 class="section-title">2. Especificaciones de la Requisición</h2>
+                <div class="form-grid">
+                    <div class="form-group full-width">
+                        <label>Producto / Mineral / Insumo Requerido *</label>
+                        <input type="text" name="Producto" required placeholder="Especificar producto o insumo requerido">
+                    </div>
+                    <div class="form-group">
+                        <label>Cantidad Solicitada *</label>
+                        <input type="text" name="Cantidad" required placeholder="Ej. 10,000 MT">
+                    </div>
+                    <div class="form-group">
+                        <label>Frecuencia de Despacho *</label>
+                        <select name="Frecuencia">
+                            <option value="Envio Unico">Envío Único (Spot)</option>
+                            <option value="Contrato Mensual">Contrato Mensual</option>
+                            <option value="Contrato Anual">Contrato Anual</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Incoterm Deseado *</label>
+                        <select name="Incoterm">
+                            <option value="FOB">FOB (Free on Board)</option>
+                            <option value="CIF">CIF (Cost, Insurance & Freight)</option>
+                            <option value="CFR">CFR (Cost and Freight)</option>
+                            <option value="EXW">EXW (Ex Works)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Puerto / Lugar de Destino *</label>
+                        <input type="text" name="Puerto_Destino" required placeholder="Ej. Puerto de Barranquilla / Houston">
+                    </div>
+                    <div class="form-group full-width">
+                        <label>Método de Pago Preferido *</label>
+                        <select name="Metodo_Pago">
+                            <option value="Transferencia / TT">Transferencia Bancaria (T/T - Swift)</option>
+                            <option value="Carta de Credito Irrevocable (DLC)">Carta de Crédito Irrevocable (DLC)</option>
+                            <option value="SBLC">Standby Letter of Credit (SBLC)</option>
+                            <option value="USDT / Cripto">USDT / Criptoactivo Corporativo</option>
+                        </select>
+                    </div>
+                </div>
+
+                <h2 class="section-title">3. Detalles Adicionales</h2>
+                <div class="form-group full-width">
+                    <label>Especificaciones Técnicas / Observaciones</label>
+                    <textarea name="Observaciones" rows="4" placeholder="Indique pureza, grado, empaque o cualquier requerimiento específico de la carga..."></textarea>
+                </div>
+
+                <button type="submit" class="btn-submit">ENVIAR CARTA DE INTENCIÓN (LOI)</button>
+            </form>
+        </div>
+
+        <div class="form-footer">
+            <p>© 2026 MINERQUIM I SUPPLY LLC | 8813 W 35TH AV, Hialeah, FL 33018, USA</p>
+            <p>Atención Directa: <a href="mailto:manuelf@minerquimsupply.com">manuelf@minerquimsupply.com</a></p>
+        </div>
+    </div>
+
+</body>
+</html>
