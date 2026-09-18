@@ -142,7 +142,6 @@
         .data-value { font-size: 0.95rem; color: var(--primary); font-weight: 600; word-break: break-all; }
         .full-width { grid-column: 1 / -1; }
 
-        /* Muestra de Firma Digital */
         .signature-display {
             text-align: center;
             background: #FFFFFF;
@@ -202,7 +201,6 @@
             <p>SISTEMA DE AUTENTICIDAD DOCUMENTAL EN LÍNEA</p>
         </div>
 
-        <!-- Buscador general -->
         <div class="search-box">
             <input type="text" id="input-doc" class="search-input" placeholder="Ejemplo: FCO-001, PI-001 o SIG-001">
             <button onclick="buscarManual()" class="search-btn">Verificar</button>
@@ -216,14 +214,12 @@
         <div class="verify-body">
             <h2 class="doc-title" id="doc-title">Verificación de Documento</h2>
 
-            <!-- Bloque especial para Firma Digital (solo se activa si es SIG) -->
             <div class="signature-display" id="sig-box">
                 <span class="data-label">Muestra Holográfica de la Firma Registrada</span>
                 <img id="img-firma" src="" alt="Firma Registrada" class="signature-img" style="display:none;">
                 <p id="no-img-text" style="font-size: 0.85rem; color: #94A3B8;">Cargando trazo digital...</p>
             </div>
 
-            <!-- Grilla Dinámica -->
             <div class="data-grid" id="data-grid">
                 <div class="data-item full-width">
                     <span class="data-label">Código Único de Verificación</span>
@@ -277,7 +273,7 @@
     </div>
 
     <script>
-        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxjffw1ukKm9551aVkhu3ZHAHLzmRNX9JF7b2H2rVxzaIxrond06cg0Sgz98wPCiIgu/exec';
+        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxGw-sley-EgcLcgiInSfetCcYtGOCoGjmlTa20-3NK5WgC8rIWdK8-HHEi-2Gk_cj_3A/exec';
 
         const urlParams = new URLSearchParams(window.location.search);
         const fcoParam = urlParams.get('fco');
@@ -302,7 +298,6 @@
             if (e.key === 'Enter') buscarManual();
         });
 
-        // Determinar qué consulta ejecutar
         let targetUrl = null;
         let queryCode = '';
 
@@ -325,13 +320,11 @@
                 .then(res => res.json())
                 .then(data => {
                     if (data && data.codigo) {
-                        // Documento encontrado
                         document.getElementById('val-codigo').innerText = data.codigo;
                         document.getElementById('val-fecha').innerText = data.fecha || '--';
                         document.getElementById('val-estatus').innerText = data.estatus || 'VIGENTE';
                         document.getElementById('val-estatus').style.color = '#10B981';
 
-                        // Estilo Banner Éxito
                         document.getElementById('status-icon').innerText = '✓';
                         document.getElementById('banner').style.backgroundColor = '#ECFDF5';
                         document.getElementById('banner').style.color = '#065F46';
@@ -346,7 +339,6 @@
                             document.getElementById('label-concepto').innerText = 'Documento / Asunto Vinculado';
                             document.getElementById('val-concepto').innerText = data.documento || '--';
                             
-                            // Mostrar bloque de firma
                             document.getElementById('sig-box').style.display = 'block';
                             if (data.fotoFirma) {
                                 const img = document.getElementById('img-firma');
@@ -368,14 +360,12 @@
                             document.getElementById('val-concepto').innerText = data.producto || '--';
                             document.getElementById('val-monto').innerText = typeof data.monto === 'number' ? '$' + data.monto.toLocaleString('en-US', {minimumFractionDigits: 2}) : (data.monto || '--');
 
-                            // Campos extra Proforma
                             document.getElementById('box-incoterm').style.display = 'block';
                             document.getElementById('val-incoterm').innerText = data.incoterm || '--';
                             document.getElementById('box-wallet').style.display = 'block';
                             document.getElementById('val-wallet').innerText = data.wallet || '--';
 
                         } else {
-                            // Caso FCO
                             document.getElementById('status-text').innerText = 'DOCUMENTO OFICIAL AUTÉNTICO Y REGISTRADO';
                             document.getElementById('doc-title').innerText = 'Ficha de Oferta Corporativa (FCO)';
                             document.getElementById('label-entidad').innerText = 'Cliente / Empresa';
@@ -386,7 +376,6 @@
                         }
 
                     } else {
-                        // Error No encontrado
                         document.getElementById('val-codigo').innerText = queryCode;
                         document.getElementById('status-text').innerText = 'DOCUMENTO O FIRMA NO ENCONTRADA';
                         document.getElementById('status-icon').innerText = '✕';
@@ -403,7 +392,6 @@
                     document.getElementById('status-text').innerText = 'ERROR DE CONEXIÓN CON EL REGISTRO';
                 });
         } else {
-            // Estado por defecto si no hay parámetro en la URL
             document.getElementById('status-text').innerText = 'INGRESE UN CÓDIGO (FCO, PI O SIG) O ESCANEE UN CÓDIGO QR';
             document.getElementById('status-icon').innerText = 'i';
             document.getElementById('banner').style.backgroundColor = '#F1F5F9';
