@@ -1,1 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Technical Data Sheet - Antimony Red Liquid Mercury | MINERQUIM I SUPPLY LLC</title>
+    <style>
+        :root {
+            --primary: #081B2E;
+            --secondary: #132E48;
+            --accent: #00AEFF;
+            --text-dark: #2A2F45;
+            --bg-light: #F4F7FA;
+            --white: #FFFFFF;
+            --border-color: #CBD5E1;
+        }
 
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; }
+        body { background-color: var(--bg-light); color: var(--text-dark); line-height: 1.5; padding: 2rem 1rem; }
+        
+        .ds-card { 
+            max-width: 900px; 
+            margin: 0 auto; 
+            background: var(--white); 
+            border-radius: 10px; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08); 
+            overflow: hidden; 
+            border: 1px solid var(--border-color); 
+        }
+
+        .ds-header { 
+            background: var(--primary); 
+            color: var(--white); 
+            padding: 2rem; 
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 4px solid var(--accent); 
+        }
+
+        .ds-logo { max-width: 140px; height: auto; border-radius: 4px; }
+        
+        .ds-title-box { text-align: right; }
+        .ds-title-box h1 { font-size: 1.3rem; letter-spacing: 1px; color: var(--white); }
+        .ds-title-box p { font-size: 0.8rem; color: #A0C4DF; text-transform: uppercase; font-weight: 600; }
+
+        .ds-banner {
+            background: var(--secondary);
+            color: var(--white);
+            text-align: center;
+            padding: 0.75rem;
+            font-size: 1.1rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .ds-body { padding: 2rem; }
+
+        .overview-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 1.5rem;
+            align-items: center;
+            background: #F8FAFC;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 1px solid #E2E8F0;
+            margin-bottom: 2rem;
+        }
+
+        .overview-list { list-style: none; }
+        .overview-list li { font-size: 0.9rem; margin-bottom: 0.4rem; position: relative; padding-left: 1.2rem; }
+        .overview-list li::before { content: "•"; color: var(--accent); font-weight: bold; font-size: 1.2rem; position: absolute; left: 0; top: -2px; }
+
+        .sample-img-box { text-align: center; }
+        .sample-img { max-width: 160px; height: auto; border-radius: 50%; box-shadow: 0 4px 10px rgba(0,0,0,0.15); }
+
+        .section-h2 {
+            font-size: 1.05rem;
+            color: var(--primary);
+            text-transform: uppercase;
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 0.3rem;
+            margin-bottom: 1rem;
+            margin-top: 1.5rem;
+            font-weight: 700;
+        }
+
+        .spec-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .spec-block {
+            background: #FFFFFF;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 1rem;
+            font-size: 0.85rem;
+        }
+
+        .spec-row { display: flex; justify-content: space-between; padding: 0.3rem 0; border-bottom: 1px dashed #E2E8F0; }
+        .spec-row:last-child { border-bottom: none; }
+        .spec-key { font-weight: 600; color: #475569; }
+        .spec-val { font-weight: 700; color: var(--primary); font-family: monospace; }
+
+        .table-custom {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            margin-bottom: 2rem;
+            font-size: 0.85rem;
+        }
+
+        .table-custom th, .table-custom td {
+            border: 1px solid var(--border-color);
+            padding: 0.6rem;
+            text-align: center;
+        }
+
+        .table-custom th {
+            background: var(--primary);
+            color: var(--white);
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+        }
+
+        .table-custom tr:nth-child(even) { background: #F8FAFC; }
+
+        .packaging-box {
+            background: #F8FAFC;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .packaging-img {
+            max-width: 100%;
+            height: auto;
+            max-height: 350px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 0.8rem;
+        }
+
+        .btn-action {
+            display: inline-block;
+            background-color: var(--primary);
+            color: var(--white);
+            padding: 0.8rem 2rem;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 700;
+            border-bottom: 3px solid var(--accent);
+            margin-top: 1.5rem;
+        }
+
+        .ds-footer { 
+            background: #F1F5F9; 
+            padding: 1.2rem; 
+            text-align: center; 
+            font-size: 0.8rem; 
+            color: #64748B; 
+            border-top: 1px solid var(--border-color); 
+        }
+
+        @media (max-width: 650px) {
+            .overview-grid, .spec-grid { grid-template-columns: 1fr; }
+            .ds-header { flex-direction: column; text-align: center; gap: 1rem; }
+            .ds-title-box { text-align: center; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="ds-card">
+        <!-- HEADER CORPORATIVO -->
+        <div class="ds-header">
+            <img src="/logo.jpg" alt="Logo MINERQUIM I SUPPLY LLC" class="ds-logo">
+            <div class="ds-title-box">
+                <h1>MINERQUIM I SUPPLY LLC</h1>
+                <p>U.S. Industrial & Mining Logistics</p>
+                <p style="font-size: 0.7rem; color: #94A3B8;">Florida Limited Liability Company</p>
+            </div>
+        </div>
+
+        <div class="ds-banner">
+            TECHNICAL DATA SHEET: ANTIMONY RED LIQUID MERCURY (Sb₂Hg₂O₇)
+        </div>
+
+        <div class="ds-body">
+            
+            <!-- GENERAL OVERVIEW -->
+            <div class="overview-grid">
+                <ul class="overview-list">
+                    <li><strong>Material:</strong> Semi-liquid cherry-red compound[cite: 6].</li>
+                    <li><strong>Density:</strong> High density of 20.2 g/cm³[cite: 6].</li>
+                    <li><strong>Chemical Formula:</strong> Sb₂O₇Hg₂ / Hg₂Sb₂O₇[cite: 6].</li>
+                    <li><strong>Molar Mass:</strong> 756.7002 g/mol[cite: 6].</li>
+                    <li><strong>Classification:</strong> Antimony Mercury Oxide[cite: 6].</li>
+                    <li><strong>Alternative Name:</strong> Cherry Red Liquid Mercury[cite: 6].</li>
+                </ul>
+                <div class="sample-img-box">
+                    <div style="width: 120px; height: 120px; background: radial-gradient(circle at 30% 30%, #ff4d4d, #990000, #4d0000); border-radius: 50%; margin: 0 auto; box-shadow: 0 6px 15px rgba(0,0,0,0.3);"></div>
+                    <span style="font-size: 0.75rem; color: #64748B; margin-top: 0.5rem; display: block;">Visual Sample[cite: 6]</span>
+                </div>
+            </div>
+
+            <!-- SPECIFICATIONS & ANALYSIS -->
+            <h2 class="section-h2">Chemical Specifications & Isotopic Analysis</h2>
+            <div class="spec-grid">
+                
+                <div class="spec-block">
+                    <div class="spec-row"><span class="spec-key">Purity Level:</span><span class="spec-val">99.9999999% (9N)[cite: 6]</span></div>
+                    <div class="spec-row"><span class="spec-key">Binding Energy:</span><span class="spec-val">211 Kcal/mole[cite: 6]</span></div>
+                    <div class="spec-row"><span class="spec-key">Melting Point:</span><span class="spec-val">170.026 °C[cite: 6]</span></div>
+                    <div class="spec-row"><span class="spec-key">Boiling Point:</span><span class="spec-val">356.720 °C[cite: 6]</span></div>
+                    <div class="spec-row"><span class="spec-key">Radiation Level:</span><span class="spec-val">0.794[cite: 6]</span></div>
+                    <div class="spec-row"><span class="spec-key">Temp Line Value:</span><span class="spec-val">160.87[cite: 6]</span></div>
+                    <div class="spec-row"><span class="spec-key">VHTC MP Reaction:</span><span class="spec-val">1.024[cite: 6]</span></div>
+                    <div class="spec-row"><span class="spec-key">K Reaction:</span><span class="spec-val">0.00016[cite: 6]</span></div>
+                </div>
+
+                <div class="spec-block">
+                    <div class="spec-row"><span class="spec-key">Isotopic Structure O:</span><span class="spec-val">O16 (99.76%), O18 (0.20%)[cite: 6]</span></div>
+                    <div class="spec-row"><span class="spec-key">Isotopic Structure Sb:</span><span class="spec-val">Sb124 (83.6%), Sb123 (9.1%)[cite: 6]</span></div>
+                    <div class="spec-row"><span class="spec-key">Isotopic Structure Hg:</span><span class="spec-val">Hg200 (23.1%), Hg202 (20.0%)[cite: 6]</span></div>
+                    <div class="spec-row"><span class="spec-key">Container Spec:</span><span class="spec-val">Vacuum Container (7 CA)[cite: 6]</span></div>
+                    <div class="spec-row"><span class="spec-key">Standard Net Weight:</span><span class="spec-val">34.5 kg Sealed Flask[cite: 6]</span></div>
+                    <div class="spec-row"><span class="spec-key">VDSA Reaction:</span><span class="spec-val">0.30 - 0.29[cite: 6]</span></div>
+                    <div class="spec-row"><span class="spec-key">Gamma Value:</span><span class="spec-val">0.44 - 0.64[cite: 6]</span></div>
+                    <div class="spec-row"><span class="spec-key">Water Content:</span><span class="spec-val">196.01 ± 0.02[cite: 6]</span></div>
+                </div>
+
+            </div>
+
+            <!-- COMPOSITION TABLE -->
+            <h2 class="section-h2">Elemental Composition (Hg₂Sb₂O₇)</h2>
+            <table class="table-custom">
+                <thead>
+                    <tr>
+                        <th>Symbol[cite: 6]</th>
+                        <th>Element[cite: 6]</th>
+                        <th>Atomic Weight[cite: 6]</th>
+                        <th>Number of Atoms[cite: 6]</th>
+                        <th>Mass Percent[cite: 6]</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Hg</strong>[cite: 6]</td>
+                        <td>Mercury[cite: 6]</td>
+                        <td>200.592[cite: 6]</td>
+                        <td>2[cite: 6]</td>
+                        <td><strong>53.0176%</strong>[cite: 6]</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Sb</strong>[cite: 6]</td>
+                        <td>Antimony[cite: 6]</td>
+                        <td>121.7601[cite: 6]</td>
+                        <td>2[cite: 6]</td>
+                        <td><strong>32.1819%</strong>[cite: 6]</td>
+                    </tr>
+                    <tr>
+                        <td><strong>O</strong>[cite: 6]</td>
+                        <td>Oxide[cite: 6]</td>
+                        <td>15.99943[cite: 6]</td>
+                        <td>7[cite: 6]</td>
+                        <td><strong>14.8006%</strong>[cite: 6]</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- PACKAGING & LOGISTICS -->
+            <h2 class="section-h2">Packaging & Industrial Storage</h2>
+            <div class="packaging-box">
+                <!-- Se asume la imagen packaging.jpg en la raíz o assets -->
+                <p style="font-size: 0.9rem; color: #475569; margin-bottom: 1rem;">
+                    Specialized High-Security Pressurized Flasks & Temperature-Controlled Container Storage[cite: 7].
+                </p>
+                <div style="text-align: center;">
+                    <a href="/loi/" class="btn-action">SUBMIT LOI FOR THIS SUPPLY</a>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- FOOTER CORPORATIVO -->
+        <div class="ds-footer">
+            <p>© 2026 MINERQUIM I SUPPLY LLC | 8813 W 35TH AV, Hialeah, FL 33018, USA</p>
+            <p>Direct Inquiries: <a href="mailto:manuelf@minerquimsupply.com" style="color: var(--accent); text-decoration: none;">manuelf@minerquimsupply.com</a></p>
+        </div>
+    </div>
+
+</body>
+</html>
