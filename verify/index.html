@@ -208,9 +208,10 @@
             } else {
                 renderizarDocumento({
                     tipo: "FIRMA",
-                    documento: "FCO-2026-01",
-                    fecha: "2026-09-18",
-                    hash: "a8f9c1e34b720198d02e4567119c8f2d"
+                    documento: "FCO-2026-MQ-003",
+                    fecha: "2026-09-19",
+                    hash: "a8f9c1e34b720198d02e4567119c8f2d",
+                    fotoFirma: "https://minerquimsupply.com/verify/firma.png"
                 }, key);
             }
         }
@@ -312,13 +313,13 @@
                     </table>
                 `;
             } 
-            // 3. VISTA FIRMA EJECUTIVA (DINÁMICA DESDE GOOGLE SHEETS)
+            // 3. VISTA FIRMA EJECUTIVA (SANATIZACIÓN DE URL INTEGRADA)
             else {
                 text.innerText = 'FIRMA ELECTRÓNICA OFICIAL Y AUTÉNTICA';
                 
-                const fotoUrl = (doc.fotoFirma && doc.fotoFirma.trim() !== '') 
-                    ? doc.fotoFirma 
-                    : ((doc.firmaUrl && doc.firmaUrl.trim() !== '') ? doc.firmaUrl : 'https://minerquimsupply.com/verify/firma.png');
+                // Extrae la URL y remueve comillas simples ('), dobles (") o punto y coma (;)
+                let rawFoto = doc.fotoFirma || doc.firmaUrl || 'https://minerquimsupply.com/verify/firma.png';
+                let fotoUrl = String(rawFoto).replace(/['";]/g, '').trim();
 
                 container.innerHTML = `
                     <div class="status-badge status-valid">
