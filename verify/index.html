@@ -116,7 +116,7 @@
         <div class="search-container">
             <p style="font-size: 0.9rem; color: #64748B; margin-bottom: 1rem;">Ingrese el código de verificación o referencia del documento:</p>
             <div class="search-box">
-                <input type="text" id="docCode" class="search-input" placeholder="Ejemplo: FCO-2026-01, PI-2026-001 o SIG-CEO">
+                <input type="text" id="docCode" class="search-input" placeholder="Ejemplo: FCO-2026-MQ-003, PI-2026-001 o SIG-CEO">
                 <button onclick="buscarManual()" class="search-btn">VERIFICAR</button>
             </div>
         </div>
@@ -171,6 +171,7 @@
         if (queryVal) {
             document.getElementById('docCode').value = queryVal;
             container.style.display = "block";
+            container.innerHTML = `<p style="text-align:center; color:#64748B;">Consultando registro de autenticidad en tiempo real para <strong>${queryVal}</strong>...</p>`;
 
             fetch(`${APPS_SCRIPT_URL}?${queryKey}=${encodeURIComponent(queryVal)}`)
                 .then(res => res.json())
@@ -197,10 +198,12 @@
                     tipo: "FCO",
                     titulo: "OFERTA CORPORATIVA OFICIAL (FCO / SCO)",
                     numero: val,
-                    fecha: "2026-09-18",
-                    producto: "Antimony Red Liquid Mercury (Sb₂Hg₂O₇)",
-                    monto: "Cotización Oficial",
-                    estatus: "Vigente & Auténtica"
+                    fecha: "19/09/2026",
+                    cliente: "FINPRA C.I. S.A.S",
+                    producto: "Antimony Red Liquid Mercury",
+                    monto: "$75.400.000$",
+                    incoterm: "CIF",
+                    estatus: "VIGENTE"
                 }, key);
             } else {
                 renderizarDocumento({
@@ -226,7 +229,7 @@
 
             const tipoDoc = (doc.tipo || '').toUpperCase();
 
-            // 1. VISTA FACTURA PROFORMA
+            // 1. VISTA FACTURA PROFORMA (DINÁMICA DESDE GOOGLE SHEETS)
             if (paramType === 'pi' || tipoDoc === "PROFORMA") {
                 text.innerText = 'FACTURA PROFORMA OFICIAL Y AUTÉNTICA';
                 container.innerHTML = `
@@ -235,7 +238,7 @@
                     </div>
                     <h2 class="doc-title">${doc.titulo || 'Factura Proforma Oficial'}</h2>
                     <p style="font-size:0.85rem; color:#475569; margin-bottom: 1rem;">
-                        <strong>N° Referencia:</strong> ${doc.numero || queryVal} | <strong>Fecha:</strong> ${doc.fecha || '--'} | <strong>Incoterm:</strong> CIF / FOB
+                        <strong>N° Referencia:</strong> ${doc.codigo || doc.numero || queryVal} | <strong>Fecha:</strong> ${doc.fecha || doc.fechaEmision || '--'} | <strong>Incoterm:</strong> ${doc.incoterm || 'CIF / FOB'}
                     </p>
                     <table class="proforma-table">
                         <thead>
@@ -248,36 +251,36 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td>Antimony Red Liquid Mercury (Sb₂Hg₂O₇)</td>
-                                <td>Según Requisición</td>
-                                <td>Cotización Oficial</td>
-                                <td><strong>${doc.monto || 'USD 120,000.00'}</strong></td>
+                                <td>${doc.producto || doc.descripcion || 'Suministro Corporativo Registrado'}</td>
+                                <td>${doc.cantidad || 'Según Requisición'}</td>
+                                <td>${doc.precioUnitario || 'Cotización Oficial'}</td>
+                                <td><strong>${doc.monto || doc.total || 'USD 120,000.00'}</strong></td>
                             </tr>
                         </tbody>
                     </table>
                     <div class="payment-box">
                         <div class="payment-title">Instrucciones de Pago & Custodia Oficial</div>
-                        <div class="payment-detail">Instrucciones de Pago / Transferencia Bancaria Oficial e Custodia Escrow</div>
+                        <div class="payment-detail">${doc.wallet || doc.instruccionesPago || 'Instrucciones de Pago / Transferencia Bancaria Oficial e Custodia Escrow'}</div>
                     </div>
                 `;
             } 
-            // 2. VISTA FCO / SCO (OFERTA CORPORATIVA)
+            // 2. VISTA FCO / SCO (DINÁMICA DESDE GOOGLE SHEETS)
             else if (paramType === 'fco' || tipoDoc === "FCO" || tipoDoc === "SCO") {
                 text.innerText = 'OFERTA CORPORATIVA OFICIAL Y AUTÉNTICA (FCO / SCO)';
                 container.innerHTML = `
                     <div class="status-badge status-valid">
-                        ✓ Oferta Oficial Registrada (${doc.estatus || 'Vigente & Auténtica'})
+                        ✓ Oferta Oficial Registrada (${doc.estatus || 'VIGENTE'})
                     </div>
                     <h2 class="doc-title">${doc.titulo || 'Full Corporate Offer (FCO / SCO)'}</h2>
                     <p style="font-size:0.85rem; color:#475569; margin-bottom: 1rem;">
-                        <strong>N° Referencia:</strong> ${doc.numero || doc.codigo || queryVal} | <strong>Fecha de Emisión:</strong> ${doc.fecha || '2026-09-18'}
+                        <strong>N° Referencia:</strong> ${doc.codigo || doc.numero || queryVal} | <strong>Fecha de Emisión:</strong> ${doc.fecha || doc.fechaEmision || '--'}
                     </p>
                     
                     <table class="sig-table">
                         <thead>
                             <tr>
                                 <th>CONCEPTO</th>
-                                <th>DETALLE DE LA OFERTA</th>
+                                <th>DETALLE DE LA OFERTA VERIFICADA</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -286,30 +289,33 @@
                                 <td>MINERQUIM I SUPPLY LLC</td>
                             </tr>
                             <tr>
-                                <td class="sig-label">Producto Cotizado:</td>
-                                <td>${doc.producto || 'Antimony Red Liquid Mercury (Sb₂Hg₂O₇)'}</td>
+                                <td class="sig-label">Cliente / Receptor:</td>
+                                <td><strong>${doc.cliente || doc.empresa || 'FINPRA C.I. S.A.S'}</strong></td>
                             </tr>
                             <tr>
-                                <td class="sig-label">Especificaciones:</td>
-                                <td>Pureza 99.999% | Flasks de 34.5 KG</td>
+                                <td class="sig-label">Producto Cotizado:</td>
+                                <td>${doc.producto || 'Antimony Red Liquid Mercury'}</td>
+                            </tr>
+                            <tr>
+                                <td class="sig-label">Monto Total Oficial:</td>
+                                <td><strong style="color: #081B2E; font-size: 1.05rem;">${doc.monto || doc.total || '$75.400.000$'}</strong></td>
                             </tr>
                             <tr>
                                 <td class="sig-label">Incoterm / Entrega:</td>
-                                <td>CIF / FOB Puerto Autorizado</td>
+                                <td>${doc.incoterm || 'CIF / FOB'}</td>
                             </tr>
                             <tr>
-                                <td class="sig-label">Estatus de la Oferta:</td>
-                                <td><strong style="color: #166534;">VALIDADA Y VIGENTE</strong></td>
+                                <td class="sig-label">Estatus en Sistema:</td>
+                                <td><strong style="color: #166534;">✓ ${doc.estatus || 'VIGENTE'} & VALIDADAS</strong></td>
                             </tr>
                         </tbody>
                     </table>
                 `;
             } 
-            // 3. VISTA FIRMA EJECUTIVA
+            // 3. VISTA FIRMA EJECUTIVA (DINÁMICA DESDE GOOGLE SHEETS)
             else {
                 text.innerText = 'FIRMA ELECTRÓNICA OFICIAL Y AUTÉNTICA';
                 
-                // Carga dinámica de la imagen según el documento consultado
                 const fotoUrl = (doc.fotoFirma && doc.fotoFirma.trim() !== '') 
                     ? doc.fotoFirma 
                     : ((doc.firmaUrl && doc.firmaUrl.trim() !== '') ? doc.firmaUrl : 'https://minerquimsupply.com/verify/firma.png');
@@ -361,3 +367,18 @@
                     </div>
                 `;
             }
+        }
+
+        // Generar Código QR Fijo
+        new QRCode(document.getElementById("qrcode"), {
+            text: window.location.href,
+            width: 120,
+            height: 120,
+            colorDark : "#081B2E",
+            colorLight : "#ffffff",
+            correctLevel : QRCode.CorrectLevel.H
+        });
+    </script>
+
+</body>
+</html>
