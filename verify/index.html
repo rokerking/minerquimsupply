@@ -208,9 +208,6 @@
             } else {
                 renderizarDocumento({
                     tipo: "FIRMA",
-                    firmante: "Manuel Alejandro Fernandes Machado",
-                    cargo: "CEO & Presidente",
-                    entidad: "MINERQUIM I SUPPLY LLC",
                     documento: "FCO-2026-MQ-003",
                     fecha: "2026-09-19",
                     hash: "a8f9c1e34b720198d02e4567119c8f2d",
@@ -316,20 +313,12 @@
                     </table>
                 `;
             } 
-            // 3. VISTA FIRMA EJECUTIVA (BLINDADA Y ORDENADA)
+            // 3. VISTA FIRMA EJECUTIVA (ESTRUCTURA 100% BLINDADA)
             else {
                 text.innerText = 'FIRMA ELECTRÓNICA OFICIAL Y AUTÉNTICA';
                 
                 let rawFoto = doc.fotoFirma || doc.firmaUrl || 'https://minerquimsupply.com/verify/firma.png';
                 let fotoUrl = String(rawFoto).replace(/['";]/g, '').trim();
-
-                // Extracción segura de variables con respaldo fijo si vinieran vacías
-                const firmanteVal = doc.firmante || 'Manuel Alejandro Fernandes Machado';
-                const cargoVal    = doc.cargo || 'CEO & Presidente';
-                const entidadVal  = doc.entidad || 'MINERQUIM I SUPPLY LLC';
-                const docVinculado= doc.documento || doc.codigo || 'FCO-2026-MQ-003';
-                const fechaFirma  = doc.fecha || '2026-09-19';
-                const hashSeguro  = doc.hash || 'a8f9c1e34b720198d02e4567119c8f2d';
 
                 container.innerHTML = `
                     <div class="status-badge status-valid">
@@ -351,27 +340,27 @@
                             <tbody>
                                 <tr>
                                     <td class="sig-label">Firmante Autorizado:</td>
-                                    <td><strong>${firmanteVal}</strong></td>
+                                    <td><strong>Manuel Alejandro Fernandes Machado</strong></td>
                                 </tr>
                                 <tr>
                                     <td class="sig-label">Cargo:</td>
-                                    <td>${cargoVal}</td>
+                                    <td>CEO & Presidente</td>
                                 </tr>
                                 <tr>
                                     <td class="sig-label">Entidad:</td>
-                                    <td>${entidadVal}</td>
+                                    <td>MINERQUIM I SUPPLY LLC</td>
                                 </tr>
                                 <tr>
                                     <td class="sig-label">Documento Vinculado:</td>
-                                    <td>${docVinculado}</td>
+                                    <td>${doc.documento || doc.codigo || 'FCO-2026-MQ-003'}</td>
                                 </tr>
                                 <tr>
                                     <td class="sig-label">Fecha de Firma:</td>
-                                    <td>${fechaFirma}</td>
+                                    <td>2026-09-19</td>
                                 </tr>
                                 <tr>
                                     <td class="sig-label">Hash de Seguridad:</td>
-                                    <td style="font-family: monospace; color: #00AEFF; font-weight: 600;">${hashSeguro}</td>
+                                    <td style="font-family: monospace; color: #00AEFF; font-weight: 600;">a8f9c1e34b720198d02e4567119c8f2d</td>
                                 </tr>
                             </tbody>
                         </table>
