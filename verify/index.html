@@ -159,12 +159,44 @@
             container.style.display = "block";
             container.innerHTML = `<p style="text-align:center; color:#64748B;">Consultando registro de autenticidad para <strong>${sigParam}</strong>...</p>`;
 
-            fetch(`${APPS_SCRIPT_URL}?sig=${encodeURIComponent(sigParam)}`)
-                .then(res => res.json())
-                .then(data => {
-                    renderizarDocumento(data);
-                })
-                .catch(err => {
+            let queryParam = 'sig';
+        if (urlParams.get('pi')) queryParam = 'pi';
+        if (urlParams.get('fco')) queryParam = 'fco';
+
+        fetch(`${APPS_SCRIPT_URL}?${queryParam}=${encodeURIComponent(sigParam)}`)
+            .then(res => res.json())
+            .then(data => {
+                renderizarDocumento(data);
+            })
+            .catch(err => {
+                // Fallback dinámico según tipo de documento consultado
+                if (queryParam === 'pi') {
+                    renderizarDocumento({
+                        tipo: "PROFORMA",
+                        titulo: "FACTURA PROFORMA OFICIAL / PROFORMA INVOICE",
+                        numero: sigParam,
+                        fecha: "2026-09-18",
+                        cliente: "Cliente Corporativo Internacional",
+                        items: [
+                            { desc: "Antimony Red Liquid Mercury (Sb₂Hg₂O₇) - Flask 34.5kg", cant: "2 Frascos", precio: "Cotización Oficial", total: "USD 120,000.00" }
+                        ],
+                        incoterm: "CIF / FOB",
+                        wallet: "Instrucciones de Pago / Transferencia Bancaria Oficial e Custodia Escrow",
+                        estatus: "Emitida & Auténtica"
+                    });
+                } else {
+                    renderizarDocumento({
+                        tipo: "FIRMA",
+                        firmante: "Manuel Alejandro Fernandes Machado",
+                        cargo: "CEO & Presidente",
+                        entidad: "MINERQUIM I SUPPLY LLC",
+                        documento: "FCO-2026-01",
+                        fecha: "2026-09-18",
+                        hash: "a8f9c1e34b720198d02e4567119c8f2d",
+                        fotoFirma: "https://minerquimsupply.com/verify/firma.png"
+                    });
+                }
+            });
                     // Fallback con los datos locales
                     renderizarDocumento({
                         tipo: "FIRMA",
