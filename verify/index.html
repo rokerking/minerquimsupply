@@ -321,25 +321,35 @@
                     </table>
                 `;
             } 
-            // 3. VISTA FIRMA EJECUTIVA (100% DINÁMICA DESDE LA BASE DE DATOS)
+           // 3. VISTA FIRMA EJECUTIVA (MAPEO INTELIGENTE POR PALABRAS CLAVE)
             else {
                 text.innerText = 'FIRMA ELECTRÓNICA OFICIAL Y AUTÉNTICA';
                 
-                // Lee la imagen de la firma que registres en tu Google Sheets en tiempo real
                 let rawFoto = doc.fotoFirma || doc.firmaUrl || 'https://minerquimsupply.com/verify/firma.jpg';
                 let fotoUrl = String(rawFoto).replace(/['";]/g, '').trim();
 
-                // Extracción dinámica segura: lee los campos directamente de Google Sheets o usa valores limpios de respaldo
-                let firmanteVal = doc.firmante || doc.nombre || 'Manuel Alejandro Fernandes Machado';
-                let cargoVal = doc.cargo || 'CEO';
-                let entidadVal = doc.entidad || doc.empresa || 'MINERQUIM I SUPPLY LLC';
-                
-                // Extrae el documento vinculado de forma limpia de la base de datos (si viene largo o vacío, usa el código consultado)
-                let rawDoc = doc.documento || doc.codigo || queryVal;
-                let docVinculado = (rawDoc && rawDoc.length < 30) ? rawDoc : (queryVal || 'FCO-2026-MQ-003');
+                // Recolectamos todos los valores posibles que vienen de la fila de Google Sheets
+                let vals = [doc.firmante, doc.cargo, doc.entidad, doc.documento, doc.codigo, doc.fecha, doc.hash, doc.nombre, doc.empresa].filter(Boolean);
 
-                let fechaFirma = doc.fecha || '2026-09-19';
-                let hashSeguro = doc.hash || 'a8f9c1e34b720198d02e4567119c8f2d';
+                // Asignación inteligente por detección de contenido
+                let firmanteVal = "Manuel Alejandro Fernandes Machado";
+                let cargoVal = "CEO";
+                let entidadVal = "MINERQUIM I SUPPLY LLC";
+                let docVinculado = queryVal || "FCO-2026-MQ-003";
+                let fechaFirma = "2026-09-19";
+                let hashSeguro = "a8f9c1e34b720198d02e4567119c8f2d";
+
+                // Buscamos dinámicamente dentro de los datos si el usuario escribió algo específico
+                vals.forEach(v => {
+                    let str = String(v).trim();
+                    let upper = str.toUpperCase();
+                    if (upper.includes("MANUEL") || upper.includes("FERNANDES")) firmanteVal = str;
+                    else if (upper === "CEO" || upper.includes("PRESIDENTE")) cargoVal = str;
+                    else if (upper.includes("MINERQUIM") || upper.includes("LLC")) entidadVal = str;
+                    else if (upper.startsWith("FCO") || upper.startsWith("SIG") || upper.startsWith("PI-")) docVinculado = str;
+                    else if (str.match(/^\d{4}-\d{2}-\d{2}$/)) fechaFirma = str;
+                    else if (str.length === 32) hashSeguro = str;
+                });
 
                 container.innerHTML = `
                     <div class="status-badge status-valid">
@@ -388,18 +398,3 @@
                     </div>
                 `;
             }
-        }
-
-        // Generar Código QR Fijo
-        new QRCode(document.getElementById("qrcode"), {
-            text: window.location.href,
-            width: 120,
-            height: 120,
-            colorDark : "#081B2E",
-            colorLight : "#ffffff",
-            correctLevel : QRCode.CorrectLevel.H
-        });
-    </script>
-
-</body>
-</html>
