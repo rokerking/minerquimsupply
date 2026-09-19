@@ -216,7 +216,7 @@
                     firmante: "Manuel Alejandro Fernandes Machado",
                     cargo: "CEO",
                     entidad: "MINERQUIM I SUPPLY LLC",
-                    documento: "FCO-2026-MQ-003",
+                    documento: val,
                     fecha: "2026-09-19",
                     hash: "a8f9c1e34b720198d02e4567119c8f2d",
                     fotoFirma: "https://minerquimsupply.com/verify/firma.jpg"
@@ -321,13 +321,25 @@
                     </table>
                 `;
             } 
-            // 3. VISTA FIRMA EJECUTIVA (DINÁMICA DESDE GOOGLE SHEETS PARA CUALQUIER IMAGEN)
+            // 3. VISTA FIRMA EJECUTIVA (100% DINÁMICA DESDE LA BASE DE DATOS)
             else {
                 text.innerText = 'FIRMA ELECTRÓNICA OFICIAL Y AUTÉNTICA';
                 
-                // Lee dinámicamente la URL de la firma que coloques en Google Sheets (fotoFirma)
+                // Lee la imagen de la firma que registres en tu Google Sheets en tiempo real
                 let rawFoto = doc.fotoFirma || doc.firmaUrl || 'https://minerquimsupply.com/verify/firma.jpg';
                 let fotoUrl = String(rawFoto).replace(/['";]/g, '').trim();
+
+                // Extracción dinámica segura: lee los campos directamente de Google Sheets o usa valores limpios de respaldo
+                let firmanteVal = doc.firmante || doc.nombre || 'Manuel Alejandro Fernandes Machado';
+                let cargoVal = doc.cargo || 'CEO';
+                let entidadVal = doc.entidad || doc.empresa || 'MINERQUIM I SUPPLY LLC';
+                
+                // Extrae el documento vinculado de forma limpia de la base de datos (si viene largo o vacío, usa el código consultado)
+                let rawDoc = doc.documento || doc.codigo || queryVal;
+                let docVinculado = (rawDoc && rawDoc.length < 30) ? rawDoc : (queryVal || 'FCO-2026-MQ-003');
+
+                let fechaFirma = doc.fecha || '2026-09-19';
+                let hashSeguro = doc.hash || 'a8f9c1e34b720198d02e4567119c8f2d';
 
                 container.innerHTML = `
                     <div class="status-badge status-valid">
@@ -349,27 +361,27 @@
                             <tbody>
                                 <tr>
                                     <td class="sig-label">Firmante Autorizado:</td>
-                                    <td><strong>Manuel Alejandro Fernandes Machado</strong></td>
+                                    <td><strong>${firmanteVal}</strong></td>
                                 </tr>
                                 <tr>
                                     <td class="sig-label">Cargo:</td>
-                                    <td>CEO</td>
+                                    <td>${cargoVal}</td>
                                 </tr>
                                 <tr>
                                     <td class="sig-label">Entidad:</td>
-                                    <td>MINERQUIM I SUPPLY LLC</td>
+                                    <td>${entidadVal}</td>
                                 </tr>
                                 <tr>
                                     <td class="sig-label">Documento Vinculado:</td>
-                                    <td>${doc.documento || doc.codigo || 'FCO-2026-MQ-003'}</td>
+                                    <td>${docVinculado}</td>
                                 </tr>
                                 <tr>
                                     <td class="sig-label">Fecha de Firma:</td>
-                                    <td>2026-09-19</td>
+                                    <td>${fechaFirma}</td>
                                 </tr>
                                 <tr>
                                     <td class="sig-label">Hash de Seguridad:</td>
-                                    <td style="font-family: monospace; color: #00AEFF; font-weight: 600;">a8f9c1e34b720198d02e4567119c8f2d</td>
+                                    <td style="font-family: monospace; color: #00AEFF; font-weight: 600; word-break: break-all;">${hashSeguro}</td>
                                 </tr>
                             </tbody>
                         </table>
