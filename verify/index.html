@@ -116,14 +116,45 @@
 
         #qrcode { 
             display: inline-block; 
-            margin: 0.8rem auto; 
-            padding: 8px; 
-            background: white; 
-            border-radius: 4px; 
-            box-shadow: 0 2px 6px rgba(0,0,0,0.08); 
-        }
+           function renderizarDocumento(doc) {
+            container.style.display = "block";
 
-        .verify-footer { background: #F1F5F9; padding: 1.2rem; text-align: center; font-size: 0.8rem; color: #64748B; border-top: 1px solid var(--border); }
+            // Actualización del Banner Superior
+            const banner = document.getElementById('banner');
+            const icon = document.getElementById('status-icon');
+            const text = document.getElementById('status-text');
+
+            icon.innerText = '✓';
+            icon.style.background = '#10B981';
+            banner.style.backgroundColor = '#ECFDF5';
+            banner.style.color = '#065F46';
+            banner.style.borderLeftColor = '#10B981';
+
+            if (doc.tipo === "FIRMA" || doc.firmante) {
+                text.innerText = 'FIRMA ELECTRÓNICA OFICIAL Y AUTÉNTICA';
+                const foto = doc.fotoFirma || doc.firmaUrl || 'firma.png';
+
+                container.innerHTML = `
+                    <div class="status-badge status-valid">
+                        ✓ Firma Electrónica Auténtica & Registrada
+                    </div>
+                    <h2 class="doc-title">${doc.titulo || 'Validación de Firma Ejecutiva'}</h2>
+                    <div class="sig-box">
+                        <p style="font-size: 0.8rem; color: #64748B; text-transform: uppercase; font-weight: 700;">Trazo Oficial de Firma Registrada</p>
+                        
+                        <img src="${foto}" onerror="this.onerror=null; this.parentNode.innerHTML='<div style=\\'font-family: cursive; font-size: 2.2rem; color: #081B2E; margin: 1rem 0;\\'>Manuel A. Fernandes M.</div>';" alt="Firma Oficial CEO" class="sig-img">
+                        
+                        <div class="sig-details">
+                            <div><strong>Titular:</strong> ${doc.firmante || 'Manuel Alejandro Fernandes Machado'}</div>
+                            <div><strong>Cargo:</strong> ${doc.cargo || 'CEO'}</div>
+                            <div><strong>Entidad:</strong> ${doc.entidad || 'MINERQUIM I SUPPLY LLC'}</div>
+                            <div><strong>Documento Vinculado:</strong> <span style="color:#00AEFF; font-weight:700;">${doc.documento || doc.ref || 'FCO-2026-01'}</span></div>
+                            <div><strong>Fecha de Registro:</strong> ${doc.fechaRegistro || doc.fecha || '2026-08-01'}</div>
+                            <div style="grid-column: 1 / -1;"><strong>Validación Hash:</strong> <span style="font-family:monospace; color:#00AEFF;">${doc.hash || 'a8f9c1e34b720198d02e4567119c8f2d'}</span></div>
+                        </div>
+                    </div>
+                `;
+            } else {
         .verify-footer a { color: var(--accent); text-decoration: none; font-weight: 600; }
         
         @media (max-width: 600px) {
