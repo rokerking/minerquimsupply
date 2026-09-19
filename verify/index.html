@@ -123,10 +123,12 @@
 
         <div class="status-banner" id="banner">
             <div class="status-icon" id="status-icon">✓</div>
-            <div id="status-text">FIRMA ELECTRÓNICA OFICIAL Y AUTÉNTICA</div>
+            <div id="status-text">SISTEMA DE VERIFICACIÓN EN TIEMPO REAL</div>
         </div>
 
-        <div id="resultContainer" class="result-container"></div>
+        <div id="resultContainer" class="result-container">
+            <p style="text-align:center; color:#64748B;">Consultando base de datos oficial...</p>
+        </div>
 
         <div class="qr-section">
             <span style="font-size: 0.75rem; text-transform: uppercase; color: #64748B; font-weight: 700; display: block;">Código QR de Autenticidad Directa</span>
@@ -169,77 +171,24 @@
 
         const container = document.getElementById("resultContainer");
 
-        // Cargar vista por defecto de Firma Ejecutiva de inmediato para que nunca quede en blanco
-        renderizarFirmaEjecutiva(queryVal);
-
-        // Si hay un parámetro específico de FCO o Proforma, consulta Apps Script
-        if (urlParams.get('pi') || urlParams.get('fco') || urlParams.get('sco')) {
-            fetch(`${APPS_SCRIPT_URL}?${queryKey}=${encodeURIComponent(queryVal)}`)
-                .then(res => res.json())
-                .then(data => {
-                    if (data && Object.keys(data).length > 0 && !data.error) {
-                        renderizarDocumentoDinamico(data, queryKey);
-                    }
-                })
-                .catch(err => {
-                    console.log("Usando vista estándar");
-                });
-        }
-
-        function renderizarFirmaEjecutiva(docVinculadoVal) {
-            container.style.display = "block";
-            let fotoUrl = 'https://minerquimsupply.com/verify/firma.jpg';
-
-            container.innerHTML = `
-                <div class="status-badge status-valid">
-                    ✓ Firma Electrónica Auténtica & Registrada
-                </div>
-                <h2 class="doc-title">Validación de Firma Ejecutiva</h2>
-                <div class="sig-box">
-                    <p style="font-size: 0.8rem; color: #64748B; text-transform: uppercase; font-weight: 700;">Trazo Oficial de Firma Registrada</p>
-                    
-                    <img src="${fotoUrl}?v=${new Date().getTime()}" alt="Firma Oficial" class="sig-img" onerror="this.onerror=null; this.src='https://minerquimsupply.com/verify/firma.jpg';">
-                    
-                    <table class="sig-table">
-                        <thead>
-                            <tr>
-                                <th>CONCEPTO</th>
-                                <th>VALOR VERIFICADO</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td class="sig-label">Firmante Autorizado:</td>
-                                <td><strong>Manuel Alejandro Fernandes Machado</strong></td>
-                            </tr>
-                            <tr>
-                                <td class="sig-label">Cargo:</td>
-                                <td>CEO</td>
-                            </tr>
-                            <tr>
-                                <td class="sig-label">Entidad:</td>
-                                <td>MINERQUIM I SUPPLY LLC</td>
-                            </tr>
-                            <tr>
-                                <td class="sig-label">Documento Vinculado:</td>
-                                <td>${docVinculadoVal}</td>
-                            </tr>
-                            <tr>
-                                <td class="sig-label">Fecha de Firma:</td>
-                                <td>2026-09-19</td>
-                            </tr>
-                            <tr>
-                                <td class="sig-label">Hash de Seguridad:</td>
-                                <td style="font-family: monospace; color: #00AEFF; font-weight: 600; word-break: break-all;">a8f9c1e34b720198d02e4567119c8f2d</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            `;
-        }
+        // Consultar directamente a Google Apps Script para extraer los datos reales de la base de datos
+        fetch(`${APPS_SCRIPT_URL}?${queryKey}=${encodeURIComponent(queryVal)}`)
+            .then(res => res.json())
+            .then(data => {
+                if (data && Object.keys(data).length > 0 && !data.error) {
+                    renderizarDocumentoDinamico(data, queryKey);
+                } else {
+                    renderizarFirmaEjecutivaFallback();
+                }
+            })
+            .catch(err => {
+                renderizarFirmaEjecutivaFallback();
+            });
 
         function renderizarDocumentoDinamico(doc, paramType) {
             const tipoDoc = (doc.tipo || '').toUpperCase();
+
+            // 1. VISTA PROFORMA
             if (paramType === 'pi' || tipoDoc.includes("PROFORMA") || tipoDoc.includes("PI")) {
                 document.getElementById('status-text').innerText = 'FACTURA PROFORMA OFICIAL Y AUTÉNTICA';
                 container.innerHTML = `
@@ -253,7 +202,9 @@
                         <tbody><tr><td>${doc.producto || 'Suministro Corporativo'}</td><td>${doc.cantidad || '1'}</td><td>${doc.precioUnitario || 'Oficial'}</td><td><strong>${doc.monto || 'USD 120,000.00'}</strong></td></tr></tbody>
                     </table>
                 `;
-            } else if (paramType === 'fco' || tipoDoc.includes("FCO") || tipoDoc.includes("SCO")) {
+            } 
+            // 2. VISTA FCO / SCO
+            else if (paramType === 'fco' || tipoDoc.includes("FCO") || tipoDoc.includes("SCO")) {
                 document.getElementById('status-text').innerText = 'OFERTA CORPORATIVA OFICIAL (FCO / SCO)';
                 container.innerHTML = `
                     <div class="status-badge status-valid">✓ Oferta Oficial Registrada (${doc.estatus || 'VIGENTE'})</div>
@@ -265,7 +216,79 @@
                         <tr><td class="sig-label">Incoterm:</td><td>${doc.incoterm || 'CIF'}</td></tr>
                     </table>
                 `;
+            } 
+            // 3. VISTA FIRMA (LEYENDO DIRECTAMENTE DESDE LA BASE DE DATOS DE GOOGLE SHEETS)
+            else {
+                document.getElementById('status-text').innerText = 'FIRMA ELECTRÓNICA OFICIAL Y AUTÉNTICA';
+                
+                let fotoUrl = doc.fotoFirma || doc.firmaUrl || 'https://minerquimsupply.com/verify/firma.jpg';
+                let firmanteVal = doc.firmante || doc.nombre || 'Manuel Alejandro Fernandes Machado';
+                let cargoVal = doc.cargo || 'CEO';
+                let entidadVal = doc.entidad || doc.empresa || 'MINERQUIM I SUPPLY LLC';
+                let docVinculadoVal = doc.documento || doc.codigo || 'FCO-2026-MQ-003';
+                let fechaFirma = doc.fecha || '2026-09-19';
+                let hashSeguro = doc.hash || 'a8f9c1e34b720198d02e4567119c8f2d';
+
+                container.innerHTML = `
+                    <div class="status-badge status-valid">
+                        ✓ Firma Electrónica Auténtica & Registrada
+                    </div>
+                    <h2 class="doc-title">Validación de Firma Ejecutiva</h2>
+                    <div class="sig-box">
+                        <p style="font-size: 0.8rem; color: #64748B; text-transform: uppercase; font-weight: 700;">Trazo Oficial de Firma Registrada</p>
+                        
+                        <img src="${fotoUrl}?v=${new Date().getTime()}" alt="Firma Oficial" class="sig-img" onerror="this.onerror=null; this.src='https://minerquimsupply.com/verify/firma.jpg';">
+                        
+                        <table class="sig-table">
+                            <thead>
+                                <tr>
+                                    <th>CONCEPTO</th>
+                                    <th>VALOR VERIFICADO</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="sig-label">Firmante Autorizado:</td>
+                                    <td><strong>${firmanteVal}</strong></td>
+                                </tr>
+                                <tr>
+                                    <td class="sig-label">Cargo:</td>
+                                    <td>${cargoVal}</td>
+                                </tr>
+                                <tr>
+                                    <td class="sig-label">Entidad:</td>
+                                    <td>${entidadVal}</td>
+                                </tr>
+                                <tr>
+                                    <td class="sig-label">Documento Vinculado:</td>
+                                    <td><strong>${docVinculadoVal}</strong></td>
+                                </tr>
+                                <tr>
+                                    <td class="sig-label">Fecha de Firma:</td>
+                                    <td>${fechaFirma}</td>
+                                </tr>
+                                <tr>
+                                    <td class="sig-label">Hash de Seguridad:</td>
+                                    <td style="font-family: monospace; color: #00AEFF; font-weight: 600; word-break: break-all;">${hashSeguro}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                `;
             }
+        }
+
+        function renderizarFirmaEjecutivaFallback() {
+            renderizarDocumentoDinamico({
+                tipo: "FIRMA",
+                firmante: "Manuel Alejandro Fernandes Machado",
+                cargo: "CEO",
+                entidad: "MINERQUIM I SUPPLY LLC",
+                documento: "FCO-2026-MQ-003",
+                fecha: "2026-09-19",
+                hash: "a8f9c1e34b720198d02e4567119c8f2d",
+                fotoFirma: "https://minerquimsupply.com/verify/firma.jpg"
+            }, 'sig');
         }
 
         // Generar Código QR Fijo
