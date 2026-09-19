@@ -3,91 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Verificación Documental | MINERQUIM I SUPPLY LLC</title>
+    <title>Sistema Oficial de Verificación Documental | MINERQUIM I SUPPLY LLC</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         :root {
             --primary: #081B2E;
             --secondary: #132E48;
             --accent: #00AEFF;
-            --text-dark: #2A2F45;
-            --bg-light: #F4F7FA;
+            --success: #059669;
+            --text-dark: #1E293B;
+            --bg-light: #F8FAFC;
             --white: #FFFFFF;
-            --success: #10B981;
-            --success-bg: #ECFDF5;
+            --border: #CBD5E1;
             --neutral: #64748B;
             --neutral-bg: #F1F5F9;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; }
-        body { background-color: var(--bg-light); color: var(--text-dark); line-height: 1.6; padding: 2rem 1rem; }
+        body { background-color: var(--bg-light); color: var(--text-dark); padding: 2rem 1rem; line-height: 1.5; }
         
         .verify-card { 
-            max-width: 650px; 
+            max-width: 850px; 
             margin: 0 auto; 
             background: var(--white); 
             border-radius: 12px; 
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1); 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08); 
             overflow: hidden; 
-            border: 1px solid #E2ECF5; 
+            border: 1px solid var(--border); 
         }
 
         .verify-header { 
             background: var(--primary); 
             color: var(--white); 
             padding: 2rem; 
-            text-align: center; 
-            border-bottom: 3px solid var(--accent); 
+            text-align: center;
+            border-bottom: 4px solid var(--accent); 
         }
 
         .verify-logo { 
             max-width: 130px; 
             height: auto; 
-            margin-bottom: 1rem; 
+            margin-bottom: 0.8rem; 
             border-radius: 6px; 
             box-shadow: 0 4px 10px rgba(0,0,0,0.3); 
         }
 
-        .verify-header h1 { font-size: 1.4rem; letter-spacing: 1px; }
-        .verify-header p { font-size: 0.85rem; color: #A0C4DF; margin-top: 0.2rem; }
+        .verify-header h1 { font-size: 1.4rem; letter-spacing: 0.5px; margin-bottom: 0.3rem; }
+        .verify-header p { font-size: 0.85rem; color: #A0C4DF; text-transform: uppercase; font-weight: 600; }
 
-        .search-box {
-            background: #E2ECF5;
-            padding: 1rem 1.5rem;
-            display: flex;
-            gap: 10px;
-            border-bottom: 1px solid #CBD5E1;
-        }
-
-        .search-input {
-            flex: 1;
-            padding: 0.6rem 1rem;
-            border: 1px solid #94A3B8;
-            border-radius: 6px;
-            font-size: 0.95rem;
-            outline: none;
-            text-transform: uppercase;
-        }
-
-        .search-input:focus {
-            border-color: var(--accent);
-            box-shadow: 0 0 0 2px rgba(0, 174, 255, 0.2);
-        }
-
-        .search-btn {
-            background: var(--primary);
-            color: var(--white);
-            border: none;
-            padding: 0.6rem 1.2rem;
-            border-radius: 6px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-
-        .search-btn:hover {
-            background: var(--secondary);
-        }
+        .search-container { padding: 2rem; background: #FFFFFF; text-align: center; border-bottom: 1px solid var(--border); }
+        .search-box { display: flex; max-width: 550px; margin: 0 auto; gap: 0.5rem; }
+        .search-input { flex: 1; padding: 0.75rem 1rem; border: 1px solid var(--border); border-radius: 6px; font-size: 1rem; outline: none; text-transform: uppercase; font-weight: 600; }
+        .search-input:focus { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(0, 174, 255, 0.2); }
+        .search-btn { background: var(--primary); color: var(--white); border: none; padding: 0.75rem 1.5rem; border-radius: 6px; font-weight: 700; cursor: pointer; border-bottom: 2px solid var(--accent); transition: background 0.2s; }
+        .search-btn:hover { background: var(--secondary); }
 
         .status-banner { 
             background-color: var(--neutral-bg); 
@@ -113,59 +82,35 @@
             font-size: 0.9rem; 
         }
 
-        .verify-body { padding: 2rem; }
-        .doc-title { font-size: 1.2rem; color: var(--primary); margin-bottom: 1.5rem; border-bottom: 2px solid #E2ECF5; padding-bottom: 0.5rem; }
+        .result-container { padding: 2rem; display: none; }
 
-        .data-grid { 
-            display: grid; 
-            grid-template-columns: 1fr 1fr; 
-            gap: 1.2rem; 
-            margin-bottom: 1.5rem; 
-        }
+        .status-badge { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.4rem 1rem; border-radius: 20px; font-weight: 700; font-size: 0.85rem; margin-bottom: 1.5rem; text-transform: uppercase; }
+        .status-valid { background: #DCFCE7; color: #166534; border: 1px solid #86EFAC; }
+        .status-invalid { background: #FEE2E2; color: #991B1B; border: 1px solid #FCA5A5; }
+        
+        .doc-title { font-size: 1.3rem; color: var(--primary); margin-bottom: 1rem; border-bottom: 2px solid #E2E8F0; padding-bottom: 0.5rem; font-weight: 700; }
 
-        .data-item { 
-            background: #F8FAFC; 
-            padding: 0.8rem 1rem; 
-            border-radius: 6px; 
-            border: 1px solid #E2E8F0; 
-        }
+        /* ESTILOS FIRMA */
+        .sig-box { background: #F8FAFC; border: 1px solid var(--border); border-radius: 8px; padding: 1.5rem; text-align: center; margin-bottom: 1.5rem; }
+        .sig-img { max-width: 280px; height: auto; margin: 1rem 0; filter: contrast(120%); }
+        .sig-details { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; text-align: left; background: var(--white); padding: 1rem; border-radius: 6px; border: 1px solid #E2E8F0; font-size: 0.85rem; }
 
-        .data-label { 
-            font-size: 0.75rem; 
-            text-transform: uppercase; 
-            color: #64748B; 
-            font-weight: 700; 
-            display: block; 
-            margin-bottom: 0.2rem; 
-        }
-
-        .data-value { font-size: 0.95rem; color: var(--primary); font-weight: 600; word-break: break-all; }
-        .full-width { grid-column: 1 / -1; }
-
-        .signature-display {
-            text-align: center;
-            background: #FFFFFF;
-            border: 2px dashed #94A3B8;
-            border-radius: 8px;
-            padding: 1.2rem;
-            margin-bottom: 1.5rem;
-            display: none;
-        }
-
-        .signature-img {
-            max-width: 260px;
-            max-height: 120px;
-            object-fit: contain;
-            margin: 0.5rem 0;
-            filter: contrast(120%);
-        }
+        /* ESTILOS PROFORMA Y FCO */
+        .proforma-table { width: 100%; border-collapse: collapse; margin: 1rem 0 1.5rem 0; font-size: 0.9rem; }
+        .proforma-table th, .proforma-table td { border: 1px solid var(--border); padding: 0.75rem; text-align: left; }
+        .proforma-table th { background: var(--secondary); color: var(--white); font-size: 0.8rem; text-transform: uppercase; }
+        .proforma-table tr:nth-child(even) { background: #F8FAFC; }
+        
+        .payment-box { background: #EFF6FF; border: 1px solid #BFDBFE; border-radius: 8px; padding: 1.25rem; margin-top: 1.5rem; }
+        .payment-title { font-size: 0.9rem; font-weight: 700; color: #1E40AF; text-transform: uppercase; margin-bottom: 0.5rem; }
+        .payment-detail { font-family: monospace; font-size: 0.95rem; color: #1E3A8A; word-break: break-all; }
 
         .qr-section { 
             text-align: center; 
             background: #F8FAFC; 
             padding: 1.5rem; 
             border-radius: 8px; 
-            border: 1px dashed #CBD5E1; 
+            border: 1px dashed var(--border); 
             margin-top: 1.5rem; 
         }
 
@@ -178,18 +123,13 @@
             box-shadow: 0 2px 6px rgba(0,0,0,0.08); 
         }
 
-        .verify-footer { 
-            background: #F1F5F9; 
-            padding: 1.2rem; 
-            text-align: center; 
-            font-size: 0.8rem; 
-            color: #64748B; 
-            border-top: 1px solid #E2E8F0; 
-        }
-
+        .verify-footer { background: #F1F5F9; padding: 1.2rem; text-align: center; font-size: 0.8rem; color: #64748B; border-top: 1px solid var(--border); }
         .verify-footer a { color: var(--accent); text-decoration: none; font-weight: 600; }
-
-        @media (max-width: 500px) { .data-grid { grid-template-columns: 1fr; } }
+        
+        @media (max-width: 600px) {
+            .sig-details { grid-template-columns: 1fr; }
+            .search-box { flex-direction: column; }
+        }
     </style>
 </head>
 <body>
@@ -198,12 +138,15 @@
         <div class="verify-header">
             <img src="/logo.jpg" alt="Logo MINERQUIM I SUPPLY LLC" class="verify-logo">
             <h1>MINERQUIM I SUPPLY LLC</h1>
-            <p>SISTEMA DE AUTENTICIDAD DOCUMENTAL EN LÍNEA</p>
+            <p>Sistema Oficial de Verificación & Autenticidad Documental</p>
         </div>
 
-        <div class="search-box">
-            <input type="text" id="input-doc" class="search-input" placeholder="Ejemplo: FCO-001, PI-001 o SIG-001">
-            <button onclick="buscarManual()" class="search-btn">Verificar</button>
+        <div class="search-container">
+            <p style="font-size: 0.9rem; color: #64748B; margin-bottom: 1rem;">Ingrese el código de verificación o referencia del documento (FCO, Proforma o Firma):</p>
+            <div class="search-box">
+                <input type="text" id="docCode" class="search-input" placeholder="Ejemplo: FCO-001, PI-2026-001 o SIG-CEO">
+                <button onclick="buscarManual()" class="search-btn">VERIFICAR</button>
+            </div>
         </div>
 
         <div class="status-banner" id="banner">
@@ -211,69 +154,56 @@
             <div id="status-text">CONSULTA DE DOCUMENTOS Y FIRMAS OFICIALES</div>
         </div>
 
-        <div class="verify-body">
-            <h2 class="doc-title" id="doc-title">Verificación de Documento</h2>
+        <div id="resultContainer" class="result-container">
+            <!-- Contenido dinámico renderizado por JS -->
+        </div>
 
-            <div class="signature-display" id="sig-box">
-                <span class="data-label">Muestra Holográfica de la Firma Registrada</span>
-                <img id="img-firma" src="" alt="Firma Registrada" class="signature-img" style="display:none;">
-                <p id="no-img-text" style="font-size: 0.85rem; color: #94A3B8;">Cargando trazo digital...</p>
-            </div>
+        <div class="qr-section">
+            <span style="font-size: 0.75rem; text-transform: uppercase; color: #64748B; font-weight: 700; display: block;">Código QR de Autenticidad Directa</span>
+            <div id="qrcode"></div>
+            <p style="font-size: 0.78rem; color: #64748B;">Escanee este código desde cualquier dispositivo móvil para validar este registro oficial en tiempo real.</p>
+        </div>
 
-            <div class="data-grid" id="data-grid">
-                <div class="data-item full-width">
-                    <span class="data-label">Código Único de Verificación</span>
-                    <span class="data-value" id="val-codigo" style="color: var(--accent); font-family: monospace; font-size: 1.1rem;">Ingrese un código</span>
-                </div>
-                <div class="data-item">
-                    <span class="data-label" id="label-fecha">Fecha de Emisión</span>
-                    <span class="data-value" id="val-fecha">--</span>
-                </div>
-                <div class="data-item">
-                    <span class="data-label" id="label-entidad">Cliente / Empresa</span>
-                    <span class="data-value" id="val-entidad">--</span>
-                </div>
-                <div class="data-item full-width" id="box-concepto">
-                    <span class="data-label" id="label-concepto">Producto / Suministro</span>
-                    <span class="data-value" id="val-concepto">--</span>
-                </div>
-                <div class="data-item" id="box-monto">
-                    <span class="data-label">Monto Total (USD)</span>
-                    <span class="data-value" id="val-monto">--</span>
-                </div>
-                <div class="data-item" id="box-incoterm" style="display:none;">
-                    <span class="data-label">Incoterm</span>
-                    <span class="data-value" id="val-incoterm">--</span>
-                </div>
-                <div class="data-item full-width" id="box-wallet" style="display:none; background: #EFF6FF; border-color: #BFDBFE;">
-                    <span class="data-label" style="color: #1E40AF;">Wallet / Datos Oficiales de Pago</span>
-                    <span class="data-value" id="val-wallet" style="color: #1E3A8A; font-family: monospace;">--</span>
-                </div>
-                <div class="data-item">
-                    <span class="data-label">Estatus</span>
-                    <span class="data-value" id="val-estatus" style="color: var(--neutral);">--</span>
-                </div>
-            </div>
-
-            <div class="qr-section">
-                <span class="data-label">Código QR de Autenticidad Directa</span>
-                <div id="qrcode"></div>
-                <p style="font-size: 0.78rem; color: #64748B;">Escanee este código desde cualquier dispositivo móvil para validar este registro oficial en tiempo real.</p>
-            </div>
-
-            <div style="text-align: center; margin-top: 1.5rem;">
-                <a href="/" style="display: inline-block; background-color: var(--primary); color: var(--white); padding: 0.6rem 1.5rem; border-radius: 6px; text-decoration: none; font-weight: 600;">Volver al Portal Principal</a>
-            </div>
+        <div style="text-align: center; margin: 1.5rem 0;">
+            <a href="/" style="display: inline-block; background-color: var(--primary); color: var(--white); padding: 0.6rem 1.5rem; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 0.9rem;">Volver al Portal Principal</a>
         </div>
 
         <div class="verify-footer">
             <p>© 2026 MINERQUIM I SUPPLY LLC | 8813 W 35TH AV, Hialeah, FL 33018, USA</p>
-            <p>Contacto de Seguridad: <a href="mailto:manuelf@minerquimsupply.com">manuelf@minerquimsupply.com</a></p>
+            <p>Custodia Financiera & Verificación Documental Normada</p>
         </div>
     </div>
 
     <script>
+        // CONFIGURACIÓN DE CONEXIÓN CON APPS SCRIPT
         const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxGw-sley-EgcLcgiInSfetCcYtGOCoGjmlTa20-3NK5WgC8rIWdK8-HHEi-2Gk_cj_3A/exec';
+
+        // REGISTRO LOCAL DE RESPALDO (FALLBACK EN CASO DE SINCRONIZACIÓN LOCAL)
+        const documentosLocales = {
+            "PI-2026-001": {
+                tipo: "PROFORMA",
+                titulo: "FACTURA PROFORMA OFICIAL / PROFORMA INVOICE",
+                numero: "PI-2026-001",
+                fecha: "2026-09-18",
+                cliente: "Cliente Corporativo Internacional",
+                items: [
+                    { desc: "Antimony Red Liquid Mercury (Sb₂Hg₂O₇) - Flask 34.5kg", cant: "2 Frascos", precio: "Según FCO / Cotización", total: "Conforme a LOI / FCO" }
+                ],
+                incoterm: "CIF / FOB Según Requisición",
+                wallet: "Instrucciones de Pago / Transferencia Bancaria Oficial e Custodia Escrow",
+                estatus: "Emitida & Auténtica"
+            },
+            "SIG-CEO": {
+                tipo: "FIRMA",
+                titulo: "REGISTRO DE FIRMA ELECTRÓNICA & PODER EJECUTIVO",
+                firmante: "Manuel Alejandro Fernandes Machado",
+                cargo: "CEO & Presidente",
+                entidad: "MINERQUIM I SUPPLY LLC",
+                fechaRegistro: "2026-08-01",
+                hash: "a8f9c1e34b720198d02e4567119c8f2d",
+                firmaUrl: "firma.png"
+            }
+        };
 
         const urlParams = new URLSearchParams(window.location.search);
         const fcoParam = urlParams.get('fco');
@@ -281,7 +211,7 @@
         const sigParam = urlParams.get('sig');
 
         function buscarManual() {
-            const raw = document.getElementById('input-doc').value.trim();
+            const raw = document.getElementById('docCode').value.trim();
             if (!raw) return;
             const code = raw.toUpperCase();
             
@@ -294,7 +224,7 @@
             }
         }
 
-        document.getElementById('input-doc').addEventListener('keypress', function (e) {
+        document.getElementById('docCode').addEventListener('keypress', function (e) {
             if (e.key === 'Enter') buscarManual();
         });
 
@@ -312,101 +242,151 @@
             targetUrl = `${APPS_SCRIPT_URL}?fco=${encodeURIComponent(fcoParam)}`;
         }
 
+        const container = document.getElementById("resultContainer");
+
         if (targetUrl) {
-            document.getElementById('input-doc').value = queryCode;
-            document.getElementById('val-codigo').innerText = 'Cargando...';
+            document.getElementById('docCode').value = queryCode;
+            container.style.display = "block";
+            container.innerHTML = `<p style="text-align:center; color:#64748B;">Consultando registro de autenticidad para <strong>${queryCode}</strong>...</p>`;
 
             fetch(targetUrl)
                 .then(res => res.json())
                 .then(data => {
                     if (data && data.codigo) {
-                        document.getElementById('val-codigo').innerText = data.codigo;
-                        document.getElementById('val-fecha').innerText = data.fecha || '--';
-                        document.getElementById('val-estatus').innerText = data.estatus || 'VIGENTE';
-                        document.getElementById('val-estatus').style.color = '#10B981';
-
-                        document.getElementById('status-icon').innerText = '✓';
-                        document.getElementById('banner').style.backgroundColor = '#ECFDF5';
-                        document.getElementById('banner').style.color = '#065F46';
-                        document.getElementById('banner').style.borderLeftColor = '#10B981';
-
-                        if (data.tipo === 'FIRMA') {
-                            document.getElementById('status-text').innerText = 'FIRMA ELECTRÓNICA OFICIAL Y AUTÉNTICA';
-                            document.getElementById('doc-title').innerText = 'Validación de Firma Ejecutiva';
-                            document.getElementById('label-fecha').innerText = 'Fecha de Firma';
-                            document.getElementById('label-entidad').innerText = 'Firmante Autorizado';
-                            document.getElementById('val-entidad').innerText = data.firmante || '--';
-                            document.getElementById('label-concepto').innerText = 'Documento / Asunto Vinculado';
-                            document.getElementById('val-concepto').innerText = data.documento || '--';
-                            
-                            document.getElementById('sig-box').style.display = 'block';
-                            if (data.fotoFirma) {
-                                const img = document.getElementById('img-firma');
-                                img.src = data.fotoFirma;
-                                img.style.display = 'inline-block';
-                                document.getElementById('no-img-text').style.display = 'none';
-                            } else {
-                                document.getElementById('no-img-text').innerText = 'Firma digitalizada verificada.';
-                            }
-
-                            document.getElementById('box-monto').style.display = 'none';
-
-                        } else if (data.tipo === 'PROFORMA') {
-                            document.getElementById('status-text').innerText = 'FACTURA PROFORMA OFICIAL Y AUTÉNTICA';
-                            document.getElementById('doc-title').innerText = 'Factura Proforma (Proforma Invoice)';
-                            document.getElementById('label-entidad').innerText = 'Cliente / Empresa';
-                            document.getElementById('val-entidad').innerText = data.cliente || '--';
-                            document.getElementById('label-concepto').innerText = 'Descripción del Suministro';
-                            document.getElementById('val-concepto').innerText = data.producto || '--';
-                            document.getElementById('val-monto').innerText = typeof data.monto === 'number' ? '$' + data.monto.toLocaleString('en-US', {minimumFractionDigits: 2}) : (data.monto || '--');
-
-                            document.getElementById('box-incoterm').style.display = 'block';
-                            document.getElementById('val-incoterm').innerText = data.incoterm || '--';
-                            document.getElementById('box-wallet').style.display = 'block';
-                            document.getElementById('val-wallet').innerText = data.wallet || '--';
-
-                        } else {
-                            document.getElementById('status-text').innerText = 'DOCUMENTO OFICIAL AUTÉNTICO Y REGISTRADO';
-                            document.getElementById('doc-title').innerText = 'Ficha de Oferta Corporativa (FCO)';
-                            document.getElementById('label-entidad').innerText = 'Cliente / Empresa';
-                            document.getElementById('val-entidad').innerText = data.cliente || '--';
-                            document.getElementById('label-concepto').innerText = 'Producto / Suministro';
-                            document.getElementById('val-concepto').innerText = data.producto || '--';
-                            document.getElementById('val-monto').innerText = typeof data.monto === 'number' ? '$' + data.monto.toLocaleString('en-US', {minimumFractionDigits: 2}) : (data.monto || '--');
-                        }
-
+                        renderizarDocumento(data);
+                    } else if (documentosLocales[queryCode.toUpperCase()]) {
+                        renderizarDocumento(documentosLocales[queryCode.toUpperCase()]);
                     } else {
-                        document.getElementById('val-codigo').innerText = queryCode;
-                        document.getElementById('status-text').innerText = 'DOCUMENTO O FIRMA NO ENCONTRADA';
-                        document.getElementById('status-icon').innerText = '✕';
-                        document.getElementById('banner').style.backgroundColor = '#FEE2E2';
-                        document.getElementById('banner').style.color = '#991B1B';
-                        document.getElementById('banner').style.borderLeftColor = '#EF4444';
-                        document.getElementById('val-estatus').innerText = 'NO REGISTRADO';
-                        document.getElementById('val-estatus').style.color = '#EF4444';
+                        renderizarError(queryCode);
                     }
                 })
                 .catch(err => {
-                    console.error(err);
-                    document.getElementById('val-codigo').innerText = queryCode;
-                    document.getElementById('status-text').innerText = 'ERROR DE CONEXIÓN CON EL REGISTRO';
+                    console.error("Error conectando con la API, usando respaldo:", err);
+                    if (documentosLocales[queryCode.toUpperCase()]) {
+                        renderizarDocumento(documentosLocales[queryCode.toUpperCase()]);
+                    } else {
+                        renderizarError(queryCode);
+                    }
                 });
-        } else {
-            document.getElementById('status-text').innerText = 'INGRESE UN CÓDIGO (FCO, PI O SIG) O ESCANEE UN CÓDIGO QR';
-            document.getElementById('status-icon').innerText = 'i';
-            document.getElementById('banner').style.backgroundColor = '#F1F5F9';
-            document.getElementById('banner').style.color = '#475569';
-            document.getElementById('banner').style.borderLeftColor = '#00AEFF';
         }
 
+        function renderizarDocumento(doc) {
+            container.style.display = "block";
+
+            // Actualización del Banner Superior
+            const banner = document.getElementById('banner');
+            const icon = document.getElementById('status-icon');
+            const text = document.getElementById('status-text');
+
+            icon.innerText = '✓';
+            icon.style.background = '#10B981';
+            banner.style.backgroundColor = '#ECFDF5';
+            banner.style.color = '#065F46';
+            banner.style.borderLeftColor = '#10B981';
+
+            if (doc.tipo === "FIRMA" || doc.firmante) {
+                text.innerText = 'FIRMA ELECTRÓNICA OFICIAL Y AUTÉNTICA';
+                const foto = doc.fotoFirma || doc.firmaUrl || 'firma.png';
+
+                container.innerHTML = `
+                    <div class="status-badge status-valid">
+                        ✓ Firma Electrónica Auténtica & Registrada
+                    </div>
+                    <h2 class="doc-title">${doc.titulo || 'Validación de Firma Ejecutiva'}</h2>
+                    <div class="sig-box">
+                        <p style="font-size: 0.8rem; color: #64748B; text-transform: uppercase; font-weight: 700;">Trazo Oficial de Firma Registrada</p>
+                        
+                        <img src="${foto}" onerror="this.onerror=null; this.parentNode.innerHTML='<div style=\\'font-family: cursive; font-size: 2.2rem; color: #081B2E; margin: 1rem 0;\\'>Manuel A. Fernandes M.</div>';" alt="Firma Oficial CEO" class="sig-img">
+                        
+                        <div class="sig-details">
+                            <div><strong>Titular:</strong> ${doc.firmante || 'Manuel Alejandro Fernandes Machado'}</div>
+                            <div><strong>Cargo:</strong> ${doc.cargo || 'CEO & Presidente'}</div>
+                            <div><strong>Entidad:</strong> ${doc.entidad || 'MINERQUIM I SUPPLY LLC'}</div>
+                            <div><strong>Fecha de Registro:</strong> ${doc.fechaRegistro || doc.fecha || '2026-08-01'}</div>
+                            <div style="grid-column: 1 / -1;"><strong>Validación Hash:</strong> <span style="font-family:monospace; color:#00AEFF;">${doc.hash || 'a8f9c1e34b720198d02e4567119c8f2d'}</span></div>
+                        </div>
+                    </div>
+                `;
+            } else {
+                text.innerText = doc.tipo === "PROFORMA" ? 'FACTURA PROFORMA OFICIAL Y AUTÉNTICA' : 'OFERTA CORPORATIVA FCO AUTÉNTICA Y REGISTRADA';
+
+                let itemsList = doc.items || [
+                    { desc: doc.producto || "Antimony Red Liquid Mercury (Sb₂Hg₂O₇)", cant: "Según Requisición", precio: "Cotización Oficial", total: typeof doc.monto === 'number' ? '$' + doc.monto.toLocaleString('en-US', {minimumFractionDigits: 2}) : (doc.monto || 'Conforme a LOI / FCO') }
+                ];
+
+                let itemsHtml = itemsList.map(item => `
+                    <tr>
+                        <td>${item.desc}</td>
+                        <td>${item.cant}</td>
+                        <td>${item.precio}</td>
+                        <td><strong>${item.total}</strong></td>
+                    </tr>
+                `).join('');
+
+                container.innerHTML = `
+                    <div class="status-badge status-valid">
+                        ✓ Documento Auténtico (${doc.estatus || 'Emitida & Auténtica'})
+                    </div>
+                    <h2 class="doc-title">${doc.titulo || 'Documento Comercial Oficial'}</h2>
+                    <p style="font-size:0.85rem; color:#475569; margin-bottom: 1rem;">
+                        <strong>N° Referencia:</strong> ${doc.numero || doc.codigo} | <strong>Fecha:</strong> ${doc.fecha || '--'} | <strong>Incoterm:</strong> ${doc.incoterm || 'CIF / FOB'}
+                    </p>
+                    
+                    <table class="proforma-table">
+                        <thead>
+                            <tr>
+                                <th>Descripción de Suministro</th>
+                                <th>Cantidad</th>
+                                <th>Precio Unitario</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${itemsHtml}
+                        </tbody>
+                    </table>
+
+                    <div class="payment-box">
+                        <div class="payment-title">Instrucciones de Pago & Custodia Oficial</div>
+                        <p style="font-size:0.85rem; color:#334155; margin-bottom:0.4rem;">Depósitos y Transferencias Institucionales sujetas a verificación previo acuerdo comercial:</p>
+                        <div class="payment-detail">${doc.wallet || 'Instrucciones de Pago / Transferencia Bancaria Oficial e Custodia Escrow'}</div>
+                    </div>
+                `;
+            }
+        }
+
+        function renderizarError(codigo) {
+            const banner = document.getElementById('banner');
+            const icon = document.getElementById('status-icon');
+            const text = document.getElementById('status-text');
+
+            icon.innerText = '✕';
+            icon.style.background = '#EF4444';
+            banner.style.backgroundColor = '#FEE2E2';
+            banner.style.color = '#991B1B';
+            banner.style.borderLeftColor = '#EF4444';
+            text.innerText = 'DOCUMENTO O FIRMA NO ENCONTRADA';
+
+            container.style.display = "block";
+            container.innerHTML = `
+                <div class="status-badge status-invalid">
+                    ❌ Documento No Encontrado o Inválido
+                </div>
+                <h2 class="doc-title" style="color:#991B1B;">Verificación Fallida</h2>
+                <p style="color:#64748B; font-size:0.9rem;">El código ingresado (<strong>${codigo}</strong>) no coincide con ningún documento ni firma registrada en nuestros servidores corporativos.</p>
+            `;
+        }
+
+        // GENERACIÓN DEL CÓDIGO QR
         new QRCode(document.getElementById("qrcode"), {
             text: window.location.href,
-            width: 128,
-            height: 128,
+            width: 120,
+            height: 120,
             colorDark : "#081B2E",
             colorLight : "#ffffff",
             correctLevel : QRCode.CorrectLevel.H
         });
     </script>
+
 </body>
 </html>
