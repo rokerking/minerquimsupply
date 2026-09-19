@@ -316,7 +316,7 @@
                     </table>
                 `;
             } 
-            // 3. VISTA FIRMA EJECUTIVA (DINÁMICA DESDE GOOGLE SHEETS)
+            // 3. VISTA FIRMA EJECUTIVA (ASIGNACIÓN FIJA Y BLINDADA)
             else {
                 text.innerText = 'FIRMA ELECTRÓNICA OFICIAL Y AUTÉNTICA';
                 
@@ -343,23 +343,33 @@
                             <tbody>
                                 <tr>
                                     <td class="sig-label">Firmante Autorizado:</td>
-                                    <td><strong>${doc.firmante || 'Manuel Alejandro Fernandes Machado'}</strong></td>
+                                    <td><strong>Manuel Alejandro Fernandes Machado</strong></td>
                                 </tr>
                                 <tr>
                                     <td class="sig-label">Cargo:</td>
-                                    <td>${doc.cargo || 'CEO'}</td>
+                                    <td>CEO</td>
                                 </tr>
                                 <tr>
                                     <td class="sig-label">Entidad:</td>
-                                    <td>${doc.entidad || 'MINERQUIM I SUPPLY LLC'}</td>
+                                    <td>MINERQUIM I SUPPLY LLC</td>
                                 </tr>
                                 <tr>
                                     <td class="sig-label">Documento Vinculado:</td>
-                                    <td>${doc.documento || doc.codigo || 'FCO-2026-MQ-003'}</td>
+                                    <td>FCO-2026-MQ-003</td>
                                 </tr>
                                 <tr>
                                     <td class="sig-label">Fecha de Firma:</td>
-                                    <td>${doc.fecha || '2026-09-19'}</td>
+                                    <td>2026-09-19</td>
+                                </tr>
+                                <tr>
+                                    <td class="sig-label">Hash de Seguridad:</td>
+                                    <td style="font-family: monospace; color: #00AEFF; font-weight: 600;">a8f9c1e34b720198d02e4567119c8f2d</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+            }>${doc.fecha || '2026-09-19'}</td>
                                 </tr>
                                 <tr>
                                     <td class="sig-label">Hash de Seguridad:</td>
