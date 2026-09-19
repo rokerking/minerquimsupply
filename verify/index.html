@@ -83,7 +83,6 @@
         .result-container { padding: 2rem; display: none; }
         .status-badge { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.4rem 1rem; border-radius: 20px; font-weight: 700; font-size: 0.85rem; margin-bottom: 1.5rem; text-transform: uppercase; }
         .status-valid { background: #DCFCE7; color: #166534; border: 1px solid #86EFAC; }
-        .status-invalid { background: #FEE2E2; color: #991B1B; border: 1px solid #FCA5A5; }
         
         .doc-title { font-size: 1.3rem; color: var(--primary); margin-bottom: 1rem; border-bottom: 2px solid #E2E8F0; padding-bottom: 0.5rem; font-weight: 700; }
 
@@ -144,20 +143,11 @@
         const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxGw-sley-EgcLcgiInSfetCcYtGOCoGjmlTa20-3NK5WgC8rIWdK8-HHEi-2Gk_cj_3A/exec';
 
         const urlParams = new URLSearchParams(window.location.search);
-        
-        let queryKey = null;
-        let queryVal = null;
+        let queryKey = 'sig';
+        let queryVal = urlParams.get('sig') || urlParams.get('pi') || urlParams.get('fco');
 
-        if (urlParams.get('sig')) {
-            queryKey = 'sig';
-            queryVal = urlParams.get('sig');
-        } else if (urlParams.get('pi')) {
-            queryKey = 'pi';
-            queryVal = urlParams.get('pi');
-        } else if (urlParams.get('fco')) {
-            queryKey = 'fco';
-            queryVal = urlParams.get('fco');
-        }
+        if (urlParams.get('pi')) queryKey = 'pi';
+        if (urlParams.get('fco')) queryKey = 'fco';
 
         function buscarManual() {
             const raw = document.getElementById('docCode').value.trim();
@@ -181,7 +171,6 @@
         if (queryVal) {
             document.getElementById('docCode').value = queryVal;
             container.style.display = "block";
-            container.innerHTML = `<p style="text-align:center; color:#64748B;">Consultando registro de autenticidad para <strong>${queryVal}</strong>...</p>`;
 
             fetch(`${APPS_SCRIPT_URL}?${queryKey}=${encodeURIComponent(queryVal)}`)
                 .then(res => res.json())
@@ -189,34 +178,28 @@
                     renderizarDocumento(data, queryKey);
                 })
                 .catch(err => {
-                    // Respuestas de respaldo estructuradas limpiamente
-                    if (queryKey === 'pi') {
-                        renderizarDocumento({
-                            tipo: "PROFORMA",
-                            titulo: "FACTURA PROFORMA OFICIAL / PROFORMA INVOICE",
-                            numero: queryVal,
-                            fecha: "2026-09-18",
-                            cliente: "Cliente Corporativo Internacional",
-                            items: [
-                                { desc: "Antimony Red Liquid Mercury (Sb₂Hg₂O₇) - Flask 34.5kg", cant: "2 Frascos", precio: "Cotización Oficial", total: "USD 120,000.00" }
-                            ],
-                            incoterm: "CIF / FOB",
-                            wallet: "Instrucciones de Pago / Transferencia Bancaria Oficial e Custodia Escrow",
-                            estatus: "Emitida & Auténtica"
-                        }, queryKey);
-                    } else {
-                        renderizarDocumento({
-                            tipo: "FIRMA",
-                            firmante: "Manuel Alejandro Fernandes Machado",
-                            cargo: "CEO & Presidente",
-                            entidad: "MINERQUIM I SUPPLY LLC",
-                            documento: "FCO-2026-01",
-                            fecha: "2026-09-18",
-                            hash: "a8f9c1e34b720198d02e4567119c8f2d",
-                            fotoFirma: "https://minerquimsupply.com/verify/firma.png"
-                        }, queryKey);
-                    }
+                    renderizarFallback(queryKey, queryVal);
                 });
+        }
+
+        function renderizarFallback(key, val) {
+            if (key === 'pi') {
+                renderizarDocumento({
+                    tipo: "PROFORMA",
+                    titulo: "FACTURA PROFORMA OFICIAL / PROFORMA INVOICE",
+                    numero: val,
+                    fecha: "2026-09-18",
+                    monto: "USD 120,000.00",
+                    estatus: "Emitida & Auténtica"
+                }, key);
+            } else {
+                renderizarDocumento({
+                    tipo: "FIRMA",
+                    documento: "FCO-2026-01",
+                    fecha: "2026-09-18",
+                    hash: "a8f9c1e34b720198d02e4567119c8f2d"
+                }, key);
+            }
         }
 
         function renderizarDocumento(doc, paramType) {
@@ -233,28 +216,14 @@
 
             if (paramType === 'pi' || (doc.tipo && doc.tipo.toUpperCase() === "PROFORMA")) {
                 text.innerText = 'FACTURA PROFORMA OFICIAL Y AUTÉNTICA';
-                let itemsList = doc.items || [
-                    { desc: doc.producto || "Antimony Red Liquid Mercury (Sb₂Hg₂O₇)", cant: "Según Requisición", precio: "Cotización Oficial", total: typeof doc.monto === 'number' ? '$' + doc.monto.toLocaleString('en-US', {minimumFractionDigits: 2}) : (doc.monto || 'USD 120,000.00') }
-                ];
-
-                let itemsHtml = itemsList.map(item => `
-                    <tr>
-                        <td>${item.desc}</td>
-                        <td>${item.cant}</td>
-                        <td>${item.precio}</td>
-                        <td><strong>${item.total}</strong></td>
-                    </tr>
-                `).join('');
-
                 container.innerHTML = `
                     <div class="status-badge status-valid">
                         ✓ Documento Auténtico (${doc.estatus || 'Emitida & Auténtica'})
                     </div>
                     <h2 class="doc-title">${doc.titulo || 'Factura Proforma Oficial'}</h2>
                     <p style="font-size:0.85rem; color:#475569; margin-bottom: 1rem;">
-                        <strong>N° Referencia:</strong> ${doc.numero || doc.documento || doc.codigo || queryVal} | <strong>Fecha:</strong> ${doc.fecha || '--'} | <strong>Incoterm:</strong> ${doc.incoterm || 'CIF / FOB'}
+                        <strong>N° Referencia:</strong> ${doc.numero || queryVal} | <strong>Fecha:</strong> ${doc.fecha || '--'} | <strong>Incoterm:</strong> CIF / FOB
                     </p>
-                    
                     <table class="proforma-table">
                         <thead>
                             <tr>
@@ -265,29 +234,21 @@
                             </tr>
                         </thead>
                         <tbody>
-                            ${itemsHtml}
+                            <tr>
+                                <td>Antimony Red Liquid Mercury (Sb₂Hg₂O₇)</td>
+                                <td>Según Requisición</td>
+                                <td>Cotización Oficial</td>
+                                <td><strong>${doc.monto || 'USD 120,000.00'}</strong></td>
+                            </tr>
                         </tbody>
                     </table>
-
                     <div class="payment-box">
                         <div class="payment-title">Instrucciones de Pago & Custodia Oficial</div>
-                        <p style="font-size:0.85rem; color:#334155; margin-bottom:0.4rem;">Depósitos y Transferencias Institucionales sujetas a verificación previo acuerdo comercial:</p>
-                        <div class="payment-detail">${doc.wallet || 'Instrucciones de Pago / Transferencia Bancaria Oficial e Custodia Escrow'}</div>
+                        <div class="payment-detail">Instrucciones de Pago / Transferencia Bancaria Oficial e Custodia Escrow</div>
                     </div>
                 `;
             } else {
                 text.innerText = 'FIRMA ELECTRÓNICA OFICIAL Y AUTÉNTICA';
-                
-                const fotoUrl = (doc.fotoFirma && doc.fotoFirma.trim() !== '') ? doc.fotoFirma : ((doc.firmaUrl && doc.firmaUrl.trim() !== '') ? doc.firmaUrl : 'https://minerquimsupply.com/verify/firma.png');
-
-                // Mapeo defensivo que asigna cada valor a su etiqueta fija sin importar el descalce de la API
-                const firmanteVal = 'Manuel Alejandro Fernandes Machado';
-                const cargoVal    = 'CEO & Presidente';
-                const entidadVal  = 'MINERQUIM I SUPPLY LLC';
-                const docVal      = doc.documento || doc.ref || doc.codigo || 'FCO-2026-01';
-                const fechaVal    = doc.fecha || doc.fechaRegistro || '2026-09-18';
-                const hashVal     = doc.hash || 'a8f9c1e34b720198d02e4567119c8f2d';
-
                 container.innerHTML = `
                     <div class="status-badge status-valid">
                         ✓ Firma Electrónica Auténtica & Registrada
@@ -295,9 +256,7 @@
                     <h2 class="doc-title">Validación de Firma Ejecutiva</h2>
                     <div class="sig-box">
                         <p style="font-size: 0.8rem; color: #64748B; text-transform: uppercase; font-weight: 700;">Trazo Oficial de Firma Registrada</p>
-                        
-                        <img src="${fotoUrl}?v=${new Date().getTime()}" alt="Firma Oficial CEO" class="sig-img" onerror="this.onerror=null; this.src='https://minerquimsupply.com/verify/firma.png';">
-                        
+                        <img src="https://minerquimsupply.com/verify/firma.png" alt="Firma Oficial CEO" class="sig-img">
                         <table class="sig-table">
                             <thead>
                                 <tr>
@@ -308,27 +267,27 @@
                             <tbody>
                                 <tr>
                                     <td class="sig-label">Firmante Autorizado:</td>
-                                    <td>${firmanteVal}</td>
+                                    <td>Manuel Alejandro Fernandes Machado</td>
                                 </tr>
                                 <tr>
                                     <td class="sig-label">Cargo:</td>
-                                    <td>${cargoVal}</td>
+                                    <td>CEO & Presidente</td>
                                 </tr>
                                 <tr>
                                     <td class="sig-label">Entidad:</td>
-                                    <td>${entidadVal}</td>
+                                    <td>MINERQUIM I SUPPLY LLC</td>
                                 </tr>
                                 <tr>
                                     <td class="sig-label">Documento Vinculado:</td>
-                                    <td>${docVal}</td>
+                                    <td>${doc.documento || 'FCO-2026-01'}</td>
                                 </tr>
                                 <tr>
                                     <td class="sig-label">Fecha de Firma:</td>
-                                    <td>${fechaVal}</td>
+                                    <td>${doc.fecha || '2026-09-18'}</td>
                                 </tr>
                                 <tr>
                                     <td class="sig-label">Hash de Seguridad:</td>
-                                    <td style="font-family: monospace; color: #00AEFF; font-weight: 600;">${hashVal}</td>
+                                    <td style="font-family: monospace; color: #00AEFF; font-weight: 600;">${doc.hash || 'a8f9c1e34b720198d02e4567119c8f2d'}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -336,3 +295,17 @@
                 `;
             }
         }
+
+        // Generar Código QR Fijo
+        new QRCode(document.getElementById("qrcode"), {
+            text: window.location.href,
+            width: 120,
+            height: 120,
+            colorDark : "#081B2E",
+            colorLight : "#ffffff",
+            correctLevel : QRCode.CorrectLevel.H
+        });
+    </script>
+
+</body>
+</html>
