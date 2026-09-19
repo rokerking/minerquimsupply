@@ -144,10 +144,10 @@
 
         const urlParams = new URLSearchParams(window.location.search);
         let queryKey = 'sig';
-        let queryVal = urlParams.get('sig') || urlParams.get('pi') || urlParams.get('fco');
+        let queryVal = urlParams.get('sig') || urlParams.get('pi') || urlParams.get('fco') || urlParams.get('sco');
 
         if (urlParams.get('pi')) queryKey = 'pi';
-        if (urlParams.get('fco')) queryKey = 'fco';
+        if (urlParams.get('fco') || urlParams.get('sco')) queryKey = 'fco';
 
         function buscarManual() {
             const raw = document.getElementById('docCode').value.trim();
@@ -192,6 +192,16 @@
                     monto: "USD 120,000.00",
                     estatus: "Emitida & Auténtica"
                 }, key);
+            } else if (key === 'fco') {
+                renderizarDocumento({
+                    tipo: "FCO",
+                    titulo: "OFERTA CORPORATIVA OFICIAL (FCO / SCO)",
+                    numero: val,
+                    fecha: "2026-09-18",
+                    producto: "Antimony Red Liquid Mercury (Sb₂Hg₂O₇)",
+                    monto: "Cotización Oficial",
+                    estatus: "Vigente & Auténtica"
+                }, key);
             } else {
                 renderizarDocumento({
                     tipo: "FIRMA",
@@ -214,7 +224,10 @@
             banner.style.color = '#065F46';
             banner.style.borderLeftColor = '#10B981';
 
-            if (paramType === 'pi' || (doc.tipo && doc.tipo.toUpperCase() === "PROFORMA")) {
+            const tipoDoc = (doc.tipo || '').toUpperCase();
+
+            // 1. VISTA FACTURA PROFORMA
+            if (paramType === 'pi' || tipoDoc === "PROFORMA") {
                 text.innerText = 'FACTURA PROFORMA OFICIAL Y AUTÉNTICA';
                 container.innerHTML = `
                     <div class="status-badge status-valid">
@@ -247,7 +260,53 @@
                         <div class="payment-detail">Instrucciones de Pago / Transferencia Bancaria Oficial e Custodia Escrow</div>
                     </div>
                 `;
-            } else {
+            } 
+            // 2. VISTA FCO / SCO (OFERTA CORPORATIVA)
+            else if (paramType === 'fco' || tipoDoc === "FCO" || tipoDoc === "SCO") {
+                text.innerText = 'OFERTA CORPORATIVA OFICIAL Y AUTÉNTICA (FCO / SCO)';
+                container.innerHTML = `
+                    <div class="status-badge status-valid">
+                        ✓ Oferta Oficial Registrada (${doc.estatus || 'Vigente & Auténtica'})
+                    </div>
+                    <h2 class="doc-title">${doc.titulo || 'Full Corporate Offer (FCO / SCO)'}</h2>
+                    <p style="font-size:0.85rem; color:#475569; margin-bottom: 1rem;">
+                        <strong>N° Referencia:</strong> ${doc.numero || doc.codigo || queryVal} | <strong>Fecha de Emisión:</strong> ${doc.fecha || '2026-09-18'}
+                    </p>
+                    
+                    <table class="sig-table">
+                        <thead>
+                            <tr>
+                                <th>CONCEPTO</th>
+                                <th>DETALLE DE LA OFERTA</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="sig-label">Entidad Emisora:</td>
+                                <td>MINERQUIM I SUPPLY LLC</td>
+                            </tr>
+                            <tr>
+                                <td class="sig-label">Producto Cotizado:</td>
+                                <td>${doc.producto || 'Antimony Red Liquid Mercury (Sb₂Hg₂O₇)'}</td>
+                            </tr>
+                            <tr>
+                                <td class="sig-label">Especificaciones:</td>
+                                <td>Pureza 99.999% | Flasks de 34.5 KG</td>
+                            </tr>
+                            <tr>
+                                <td class="sig-label">Incoterm / Entrega:</td>
+                                <td>CIF / FOB Puerto Autorizado</td>
+                            </tr>
+                            <tr>
+                                <td class="sig-label">Estatus de la Oferta:</td>
+                                <td><strong style="color: #166534;">VALIDADA Y VIGENTE</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `;
+            } 
+            // 3. VISTA FIRMA EJECUTIVA
+            else {
                 text.innerText = 'FIRMA ELECTRÓNICA OFICIAL Y AUTÉNTICA';
                 container.innerHTML = `
                     <div class="status-badge status-valid">
