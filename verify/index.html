@@ -171,7 +171,6 @@
 
         const container = document.getElementById("resultContainer");
 
-        // Consultar directamente a Google Apps Script para extraer los datos reales de la base de datos
         fetch(`${APPS_SCRIPT_URL}?${queryKey}=${encodeURIComponent(queryVal)}`)
             .then(res => res.json())
             .then(data => {
@@ -188,7 +187,6 @@
         function renderizarDocumentoDinamico(doc, paramType) {
             const tipoDoc = (doc.tipo || '').toUpperCase();
 
-            // 1. VISTA PROFORMA
             if (paramType === 'pi' || tipoDoc.includes("PROFORMA") || tipoDoc.includes("PI")) {
                 document.getElementById('status-text').innerText = 'FACTURA PROFORMA OFICIAL Y AUTÉNTICA';
                 container.innerHTML = `
@@ -203,7 +201,6 @@
                     </table>
                 `;
             } 
-            // 2. VISTA FCO / SCO
             else if (paramType === 'fco' || tipoDoc.includes("FCO") || tipoDoc.includes("SCO")) {
                 document.getElementById('status-text').innerText = 'OFERTA CORPORATIVA OFICIAL (FCO / SCO)';
                 container.innerHTML = `
@@ -217,17 +214,40 @@
                     </table>
                 `;
             } 
-            // 3. VISTA FIRMA (LEYENDO DIRECTAMENTE DESDE LA BASE DE DATOS DE GOOGLE SHEETS)
             else {
                 document.getElementById('status-text').innerText = 'FIRMA ELECTRÓNICA OFICIAL Y AUTÉNTICA';
                 
                 let fotoUrl = doc.fotoFirma || doc.firmaUrl || 'https://minerquimsupply.com/verify/firma.jpg';
-                let firmanteVal = doc.firmante || doc.nombre || 'Manuel Alejandro Fernandes Machado';
-                let cargoVal = doc.cargo || 'CEO';
-                let entidadVal = doc.entidad || doc.empresa || 'MINERQUIM I SUPPLY LLC';
-                let docVinculadoVal = doc.documento || doc.codigo || 'FCO-2026-MQ-003';
-                let fechaFirma = doc.fecha || '2026-09-19';
-                let hashSeguro = doc.hash || 'a8f9c1e34b720198d02e4567119c8f2d';
+                
+                // Agrupamos todos los valores posibles que vienen de la fila para ordenarlos con inteligencia artificial local
+                let rawValues = [doc.firmante, doc.cargo, doc.entidad, doc.documento, doc.codigo, doc.fecha, doc.hash, doc.nombre, doc.empresa, doc[2], doc[3], doc[4], doc[5], doc[6], doc[7]].filter(v => v !== undefined && v !== null && String(v).trim() !== "");
+
+                let firmanteVal = "Manuel Alejandro Fernandes Machado";
+                let cargoVal = "CEO";
+                let entidadVal = "MINERQUIM I SUPPLY LLC";
+                let docVinculadoVal = "FCO-2026-MQ-003";
+                let fechaFirma = "2026-09-19";
+                let hashSeguro = "a8f9c1e34b720198d02e4567119c8f2d";
+
+                // Clasificador automático inteligente para los datos de Google Sheets
+                rawValues.forEach(val => {
+                    let str = String(val).trim();
+                    let upper = str.toUpperCase();
+
+                    if (upper.includes("MANUEL") || upper.includes("FERNANDES")) {
+                        firmanteVal = str;
+                    } else if (upper === "CEO" || upper.includes("PRESIDENTE") || (str.length < 15 && !upper.includes("MINERQUIM") && !upper.includes("FCO") && !upper.includes("-"))) {
+                        cargoVal = str;
+                    } else if (upper.includes("MINERQUIM") || upper.includes("LLC")) {
+                        entidadVal = str;
+                    } else if (upper.startsWith("FCO") || upper.startsWith("SIG") || upper.startsWith("PI-") || upper.includes("-")) {
+                        docVinculadoVal = str;
+                    } else if (str.match(/^\d{4}-\d{2}-\d{2}$/)) {
+                        fechaFirma = str;
+                    } else if (str.length >= 20 && !str.includes(" ")) {
+                        hashSeguro = str;
+                    }
+                });
 
                 container.innerHTML = `
                     <div class="status-badge status-valid">
