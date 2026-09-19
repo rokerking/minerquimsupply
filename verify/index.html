@@ -83,6 +83,7 @@
         .result-container { padding: 2rem; display: none; }
         .status-badge { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.4rem 1rem; border-radius: 20px; font-weight: 700; font-size: 0.85rem; margin-bottom: 1.5rem; text-transform: uppercase; }
         .status-valid { background: #DCFCE7; color: #166534; border: 1px solid #86EFAC; }
+        .status-error { background: #FEE2E2; color: #991B1B; border: 1px solid #FCA5A5; }
         
         .doc-title { font-size: 1.3rem; color: var(--primary); margin-bottom: 1rem; border-bottom: 2px solid #E2E8F0; padding-bottom: 0.5rem; font-weight: 700; }
 
@@ -176,7 +177,11 @@
             fetch(`${APPS_SCRIPT_URL}?${queryKey}=${encodeURIComponent(queryVal)}`)
                 .then(res => res.json())
                 .then(data => {
-                    renderizarDocumento(data, queryKey);
+                    if (data && Object.keys(data).length > 0 && !data.error) {
+                        renderizarDocumento(data, queryKey);
+                    } else {
+                        renderizarFallback(queryKey, queryVal);
+                    }
                 })
                 .catch(err => {
                     renderizarFallback(queryKey, queryVal);
@@ -233,7 +238,7 @@
 
             const tipoDoc = (doc.tipo || '').toUpperCase();
 
-            // 1. VISTA FACTURA PROFORMA (DINÁMICA DESDE GOOGLE SHEETS)
+            // 1. VISTA FACTURA PROFORMA
             if (paramType === 'pi' || tipoDoc.includes("PROFORMA") || tipoDoc.includes("PI")) {
                 text.innerText = 'FACTURA PROFORMA OFICIAL Y AUTÉNTICA';
                 container.innerHTML = `
@@ -268,7 +273,7 @@
                     </div>
                 `;
             } 
-            // 2. VISTA FCO / SCO (DINÁMICA DESDE GOOGLE SHEETS)
+            // 2. VISTA FCO / SCO
             else if (paramType === 'fco' || tipoDoc.includes("FCO") || tipoDoc.includes("SCO") || tipoDoc.includes("OFERTA")) {
                 text.innerText = 'OFERTA CORPORATIVA OFICIAL Y AUTÉNTICA (FCO / SCO)';
                 container.innerHTML = `
@@ -316,12 +321,20 @@
                     </table>
                 `;
             } 
-            // 3. VISTA FIRMA EJECUTIVA (ASIGNACIÓN FIJA Y BLINDADA)
+            // 3. VISTA FIRMA EJECUTIVA (MAPEADO INTELIGENTE DE PROPIEDADES)
             else {
                 text.innerText = 'FIRMA ELECTRÓNICA OFICIAL Y AUTÉNTICA';
                 
                 let rawFoto = doc.fotoFirma || doc.firmaUrl || 'https://minerquimsupply.com/verify/firma.png';
                 let fotoUrl = String(rawFoto).replace(/['";]/g, '').trim();
+
+                // Detección inteligente por si Sheets devuelve las propiedades mapeadas o desordenadas
+                const firmanteVal = doc.firmante || doc.nombre || doc.titular || 'Manuel Alejandro Fernandes Machado';
+                const cargoVal = (doc.cargo && doc.cargo.length < 20) ? doc.cargo : 'CEO';
+                const entidadVal = doc.entidad || doc.empresa || 'MINERQUIM I SUPPLY LLC';
+                const docVinculado = doc.documento || doc.codigo || queryVal || 'FCO-2026-MQ-003';
+                const fechaFirma = doc.fecha || '2026-09-19';
+                const hashSeguro = doc.hash || 'a8f9c1e34b720198d02e4567119c8f2d';
 
                 container.innerHTML = `
                     <div class="status-badge status-valid">
@@ -343,37 +356,27 @@
                             <tbody>
                                 <tr>
                                     <td class="sig-label">Firmante Autorizado:</td>
-                                    <td><strong>Manuel Alejandro Fernandes Machado</strong></td>
+                                    <td><strong>${firmanteVal}</strong></td>
                                 </tr>
                                 <tr>
                                     <td class="sig-label">Cargo:</td>
-                                    <td>CEO</td>
+                                    <td>${cargoVal}</td>
                                 </tr>
                                 <tr>
                                     <td class="sig-label">Entidad:</td>
-                                    <td>MINERQUIM I SUPPLY LLC</td>
+                                    <td>${entidadVal}</td>
                                 </tr>
                                 <tr>
                                     <td class="sig-label">Documento Vinculado:</td>
-                                    <td>FCO-2026-MQ-003</td>
+                                    <td>${docVinculado}</td>
                                 </tr>
                                 <tr>
                                     <td class="sig-label">Fecha de Firma:</td>
-                                    <td>2026-09-19</td>
+                                    <td>${fechaFirma}</td>
                                 </tr>
                                 <tr>
                                     <td class="sig-label">Hash de Seguridad:</td>
-                                    <td style="font-family: monospace; color: #00AEFF; font-weight: 600;">a8f9c1e34b720198d02e4567119c8f2d</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                `;
-            }>${doc.fecha || '2026-09-19'}</td>
-                                </tr>
-                                <tr>
-                                    <td class="sig-label">Hash de Seguridad:</td>
-                                    <td style="font-family: monospace; color: #00AEFF; font-weight: 600;">${doc.hash || 'a8f9c1e34b720198d02e4567119c8f2d'}</td>
+                                    <td style="font-family: monospace; color: #00AEFF; font-weight: 600;">${hashSeguro}</td>
                                 </tr>
                             </tbody>
                         </table>
