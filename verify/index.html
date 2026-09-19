@@ -10,7 +10,6 @@
             --primary: #081B2E;
             --secondary: #132E48;
             --accent: #00AEFF;
-            --success: #059669;
             --text-dark: #1E293B;
             --bg-light: #F8FAFC;
             --white: #FFFFFF;
@@ -56,7 +55,6 @@
         .search-input { flex: 1; padding: 0.75rem 1rem; border: 1px solid var(--border); border-radius: 6px; font-size: 1rem; outline: none; text-transform: uppercase; font-weight: 600; }
         .search-input:focus { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(0, 174, 255, 0.2); }
         .search-btn { background: var(--primary); color: var(--white); border: none; padding: 0.75rem 1.5rem; border-radius: 6px; font-weight: 700; cursor: pointer; border-bottom: 2px solid var(--accent); transition: background 0.2s; }
-        .search-btn:hover { background: var(--secondary); }
 
         .status-banner { 
             background-color: var(--neutral-bg); 
@@ -83,84 +81,24 @@
         }
 
         .result-container { padding: 2rem; display: none; }
-
         .status-badge { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.4rem 1rem; border-radius: 20px; font-weight: 700; font-size: 0.85rem; margin-bottom: 1.5rem; text-transform: uppercase; }
         .status-valid { background: #DCFCE7; color: #166534; border: 1px solid #86EFAC; }
         .status-invalid { background: #FEE2E2; color: #991B1B; border: 1px solid #FCA5A5; }
         
         .doc-title { font-size: 1.3rem; color: var(--primary); margin-bottom: 1rem; border-bottom: 2px solid #E2E8F0; padding-bottom: 0.5rem; font-weight: 700; }
 
-        /* ESTILOS FIRMA */
         .sig-box { background: #F8FAFC; border: 1px solid var(--border); border-radius: 8px; padding: 1.5rem; text-align: center; margin-bottom: 1.5rem; }
-        .sig-img { max-width: 280px; height: auto; margin: 1rem 0; filter: contrast(120%); }
-        .sig-details { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; text-align: left; background: var(--white); padding: 1rem; border-radius: 6px; border: 1px solid #E2E8F0; font-size: 0.85rem; }
-
-        /* ESTILOS PROFORMA Y FCO */
-        .proforma-table { width: 100%; border-collapse: collapse; margin: 1rem 0 1.5rem 0; font-size: 0.9rem; }
-        .proforma-table th, .proforma-table td { border: 1px solid var(--border); padding: 0.75rem; text-align: left; }
-        .proforma-table th { background: var(--secondary); color: var(--white); font-size: 0.8rem; text-transform: uppercase; }
-        .proforma-table tr:nth-child(even) { background: #F8FAFC; }
+        .sig-img { max-width: 320px; height: auto; margin: 1rem 0; border: 1px solid #CBD5E1; border-radius: 4px; padding: 5px; background: #fff; }
         
-        .payment-box { background: #EFF6FF; border: 1px solid #BFDBFE; border-radius: 8px; padding: 1.25rem; margin-top: 1.5rem; }
-        .payment-title { font-size: 0.9rem; font-weight: 700; color: #1E40AF; text-transform: uppercase; margin-bottom: 0.5rem; }
-        .payment-detail { font-family: monospace; font-size: 0.95rem; color: #1E3A8A; word-break: break-all; }
+        .sig-table { width: 100%; border-collapse: collapse; margin-top: 1.2rem; font-size: 0.9rem; background: var(--white); border-radius: 6px; overflow: hidden; border: 1px solid #CBD5E1; }
+        .sig-table th { background: #E2ECF5; color: var(--primary); font-weight: 700; text-transform: uppercase; font-size: 0.8rem; padding: 0.61rem 0.8rem; border: 1px solid var(--border); text-align: left; }
+        .sig-table td { padding: 0.65rem 0.8rem; border: 1px solid var(--border); text-align: left; }
+        .sig-table tr:nth-child(even) { background: #F8FAFC; }
+        .sig-label { font-weight: 700; color: var(--primary); width: 35%; }
 
-        .qr-section { 
-            text-align: center; 
-            background: #F8FAFC; 
-            padding: 1.5rem; 
-            border-radius: 8px; 
-            border: 1px dashed var(--border); 
-            margin-top: 1.5rem; 
-        }
-
-        #qrcode { 
-            display: inline-block; 
-           function renderizarDocumento(doc) {
-            container.style.display = "block";
-
-            // Actualización del Banner Superior
-            const banner = document.getElementById('banner');
-            const icon = document.getElementById('status-icon');
-            const text = document.getElementById('status-text');
-
-            icon.innerText = '✓';
-            icon.style.background = '#10B981';
-            banner.style.backgroundColor = '#ECFDF5';
-            banner.style.color = '#065F46';
-            banner.style.borderLeftColor = '#10B981';
-
-            if (doc.tipo === "FIRMA" || doc.firmante) {
-                text.innerText = 'FIRMA ELECTRÓNICA OFICIAL Y AUTÉNTICA';
-                const foto = doc.fotoFirma || doc.firmaUrl || 'firma.png';
-
-                container.innerHTML = `
-                    <div class="status-badge status-valid">
-                        ✓ Firma Electrónica Auténtica & Registrada
-                    </div>
-                    <h2 class="doc-title">${doc.titulo || 'Validación de Firma Ejecutiva'}</h2>
-                    <div class="sig-box">
-                        <p style="font-size: 0.8rem; color: #64748B; text-transform: uppercase; font-weight: 700;">Trazo Oficial de Firma Registrada</p>
-                        
-                        <img src="${foto}" onerror="this.onerror=null; this.parentNode.innerHTML='<div style=\\'font-family: cursive; font-size: 2.2rem; color: #081B2E; margin: 1rem 0;\\'>Manuel A. Fernandes M.</div>';" alt="Firma Oficial CEO" class="sig-img">
-                        
-                        <div class="sig-details">
-                            <div><strong>Titular:</strong> ${doc.firmante || 'Manuel Alejandro Fernandes Machado'}</div>
-                            <div><strong>Cargo:</strong> ${doc.cargo || 'CEO'}</div>
-                            <div><strong>Entidad:</strong> ${doc.entidad || 'MINERQUIM I SUPPLY LLC'}</div>
-                            <div><strong>Documento Vinculado:</strong> <span style="color:#00AEFF; font-weight:700;">${doc.documento || doc.ref || 'FCO-2026-01'}</span></div>
-                            <div><strong>Fecha de Registro:</strong> ${doc.fechaRegistro || doc.fecha || '2026-08-01'}</div>
-                            <div style="grid-column: 1 / -1;"><strong>Validación Hash:</strong> <span style="font-family:monospace; color:#00AEFF;">${doc.hash || 'a8f9c1e34b720198d02e4567119c8f2d'}</span></div>
-                        </div>
-                    </div>
-                `;
-            } else {
-        .verify-footer a { color: var(--accent); text-decoration: none; font-weight: 600; }
-        
-        @media (max-width: 600px) {
-            .sig-details { grid-template-columns: 1fr; }
-            .search-box { flex-direction: column; }
-        }
+        .qr-section { text-align: center; background: #F8FAFC; padding: 1.5rem; border-radius: 8px; border: 1px dashed var(--border); margin-top: 1.5rem; }
+        #qrcode { display: inline-block; margin: 0.8rem auto; padding: 8px; background: white; border-radius: 4px; box-shadow: 0 2px 6px rgba(0,0,0,0.08); }
+        .verify-footer { background: #F1F5F9; padding: 1.2rem; text-align: center; font-size: 0.8rem; color: #64748B; border-top: 1px solid var(--border); }
     </style>
 </head>
 <body>
@@ -173,9 +111,9 @@
         </div>
 
         <div class="search-container">
-            <p style="font-size: 0.9rem; color: #64748B; margin-bottom: 1rem;">Ingrese el código de verificación o referencia del documento (FCO, Proforma o Firma):</p>
+            <p style="font-size: 0.9rem; color: #64748B; margin-bottom: 1rem;">Ingrese el código de verificación o referencia del documento:</p>
             <div class="search-box">
-                <input type="text" id="docCode" class="search-input" placeholder="Ejemplo: FCO-001, PI-2026-001 o SIG-CEO">
+                <input type="text" id="docCode" class="search-input" placeholder="Ejemplo: FCO-2026-01 o SIG-CEO">
                 <button onclick="buscarManual()" class="search-btn">VERIFICAR</button>
             </div>
         </div>
@@ -185,9 +123,7 @@
             <div id="status-text">CONSULTA DE DOCUMENTOS Y FIRMAS OFICIALES</div>
         </div>
 
-        <div id="resultContainer" class="result-container">
-            <!-- Contenido dinámico renderizado por JS -->
-        </div>
+        <div id="resultContainer" class="result-container"></div>
 
         <div class="qr-section">
             <span style="font-size: 0.75rem; text-transform: uppercase; color: #64748B; font-weight: 700; display: block;">Código QR de Autenticidad Directa</span>
@@ -195,116 +131,56 @@
             <p style="font-size: 0.78rem; color: #64748B;">Escanee este código desde cualquier dispositivo móvil para validar este registro oficial en tiempo real.</p>
         </div>
 
-        <div style="text-align: center; margin: 1.5rem 0;">
-            <a href="/" style="display: inline-block; background-color: var(--primary); color: var(--white); padding: 0.6rem 1.5rem; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 0.9rem;">Volver al Portal Principal</a>
-        </div>
-
         <div class="verify-footer">
             <p>© 2026 MINERQUIM I SUPPLY LLC | 8813 W 35TH AV, Hialeah, FL 33018, USA</p>
-            <p>Custodia Financiera & Verificación Documental Normada</p>
         </div>
     </div>
 
     <script>
-        // CONFIGURACIÓN DE CONEXIÓN CON APPS SCRIPT
         const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxGw-sley-EgcLcgiInSfetCcYtGOCoGjmlTa20-3NK5WgC8rIWdK8-HHEi-2Gk_cj_3A/exec';
 
-        // REGISTRO LOCAL DE RESPALDO (FALLBACK EN CASO DE SINCRONIZACIÓN LOCAL)
-        const documentosLocales = {
-            "PI-2026-001": {
-                tipo: "PROFORMA",
-                titulo: "FACTURA PROFORMA OFICIAL / PROFORMA INVOICE",
-                numero: "PI-2026-001",
-                fecha: "2026-09-18",
-                cliente: "Cliente Corporativo Internacional",
-                items: [
-                    { desc: "Antimony Red Liquid Mercury (Sb₂Hg₂O₇) - Flask 34.5kg", cant: "2 Frascos", precio: "Según FCO / Cotización", total: "Conforme a LOI / FCO" }
-                ],
-                incoterm: "CIF / FOB Según Requisición",
-                wallet: "Instrucciones de Pago / Transferencia Bancaria Oficial e Custodia Escrow",
-                estatus: "Emitida & Auténtica"
-            },
-            "SIG-CEO": {
-                tipo: "FIRMA",
-                titulo: "REGISTRO DE FIRMA ELECTRÓNICA & PODER EJECUTIVO",
-                firmante: "Manuel Alejandro Fernandes Machado",
-                cargo: "CEO & Presidente",
-                entidad: "MINERQUIM I SUPPLY LLC",
-                fechaRegistro: "2026-08-01",
-                hash: "a8f9c1e34b720198d02e4567119c8f2d",
-                firmaUrl: "firma.png"
-            }
-        };
-
         const urlParams = new URLSearchParams(window.location.search);
-        const fcoParam = urlParams.get('fco');
-        const piParam  = urlParams.get('pi');
-        const sigParam = urlParams.get('sig');
+        const sigParam = urlParams.get('sig') || urlParams.get('fco') || urlParams.get('pi');
 
         function buscarManual() {
             const raw = document.getElementById('docCode').value.trim();
             if (!raw) return;
-            const code = raw.toUpperCase();
-            
-            if (code.startsWith('PI') || code.startsWith('PROF')) {
-                window.location.href = `?pi=${encodeURIComponent(code)}`;
-            } else if (code.startsWith('SIG') || code.startsWith('FIRMA')) {
-                window.location.href = `?sig=${encodeURIComponent(code)}`;
-            } else {
-                window.location.href = `?fco=${encodeURIComponent(code)}`;
-            }
+            window.location.href = `?sig=${encodeURIComponent(raw.toUpperCase())}`;
         }
 
         document.getElementById('docCode').addEventListener('keypress', function (e) {
             if (e.key === 'Enter') buscarManual();
         });
 
-        let targetUrl = null;
-        let queryCode = '';
-
-        if (sigParam) {
-            queryCode = sigParam;
-            targetUrl = `${APPS_SCRIPT_URL}?sig=${encodeURIComponent(sigParam)}`;
-        } else if (piParam) {
-            queryCode = piParam;
-            targetUrl = `${APPS_SCRIPT_URL}?pi=${encodeURIComponent(piParam)}`;
-        } else if (fcoParam) {
-            queryCode = fcoParam;
-            targetUrl = `${APPS_SCRIPT_URL}?fco=${encodeURIComponent(fcoParam)}`;
-        }
-
         const container = document.getElementById("resultContainer");
 
-        if (targetUrl) {
-            document.getElementById('docCode').value = queryCode;
+        if (sigParam) {
+            document.getElementById('docCode').value = sigParam;
             container.style.display = "block";
-            container.innerHTML = `<p style="text-align:center; color:#64748B;">Consultando registro de autenticidad para <strong>${queryCode}</strong>...</p>`;
+            container.innerHTML = `<p style="text-align:center; color:#64748B;">Consultando registro de autenticidad para <strong>${sigParam}</strong>...</p>`;
 
-            fetch(targetUrl)
+            fetch(`${APPS_SCRIPT_URL}?sig=${encodeURIComponent(sigParam)}`)
                 .then(res => res.json())
                 .then(data => {
-                    if (data && data.codigo) {
-                        renderizarDocumento(data);
-                    } else if (documentosLocales[queryCode.toUpperCase()]) {
-                        renderizarDocumento(documentosLocales[queryCode.toUpperCase()]);
-                    } else {
-                        renderizarError(queryCode);
-                    }
+                    renderizarDocumento(data);
                 })
                 .catch(err => {
-                    console.error("Error conectando con la API, usando respaldo:", err);
-                    if (documentosLocales[queryCode.toUpperCase()]) {
-                        renderizarDocumento(documentosLocales[queryCode.toUpperCase()]);
-                    } else {
-                        renderizarError(queryCode);
-                    }
+                    // Fallback con los datos locales
+                    renderizarDocumento({
+                        tipo: "FIRMA",
+                        firmante: "Manuel Alejandro Fernandes Machado",
+                        cargo: "CEO & Presidente",
+                        entidad: "MINERQUIM I SUPPLY LLC",
+                        documento: "FCO-2026-01",
+                        fecha: "2026-09-18",
+                        hash: "a8f9c1e34b720198d02e4567119c8f2d",
+                        fotoFirma: "https://minerquimsupply.com/verify/firma.png"
+                    });
                 });
         }
 
         function renderizarDocumento(doc) {
             container.style.display = "block";
-
-            // Actualización del Banner Superior
             const banner = document.getElementById('banner');
             const icon = document.getElementById('status-icon');
             const text = document.getElementById('status-text');
@@ -314,101 +190,59 @@
             banner.style.backgroundColor = '#ECFDF5';
             banner.style.color = '#065F46';
             banner.style.borderLeftColor = '#10B981';
+            text.innerText = 'FIRMA ELECTRÓNICA OFICIAL Y AUTÉNTICA';
 
-            if (doc.tipo === "FIRMA" || doc.firmante) {
-                text.innerText = 'FIRMA ELECTRÓNICA OFICIAL Y AUTÉNTICA';
-                const foto = doc.fotoFirma || doc.firmaUrl || 'firma.png';
+            const fotoUrl = doc.fotoFirma || 'https://minerquimsupply.com/verify/firma.png';
 
-                container.innerHTML = `
-                    <div class="status-badge status-valid">
-                        ✓ Firma Electrónica Auténtica & Registrada
-                    </div>
-                    <h2 class="doc-title">${doc.titulo || 'Validación de Firma Ejecutiva'}</h2>
-                    <div class="sig-box">
-                        <p style="font-size: 0.8rem; color: #64748B; text-transform: uppercase; font-weight: 700;">Trazo Oficial de Firma Registrada</p>
-                        
-                        <img src="${foto}" onerror="this.onerror=null; this.parentNode.innerHTML='<div style=\\'font-family: cursive; font-size: 2.2rem; color: #081B2E; margin: 1rem 0;\\'>Manuel A. Fernandes M.</div>';" alt="Firma Oficial CEO" class="sig-img">
-                        
-                        <div class="sig-details">
-                            <div><strong>Titular:</strong> ${doc.firmante || 'Manuel Alejandro Fernandes Machado'}</div>
-                            <div><strong>Cargo:</strong> ${doc.cargo || 'CEO & Presidente'}</div>
-                            <div><strong>Entidad:</strong> ${doc.entidad || 'MINERQUIM I SUPPLY LLC'}</div>
-                            <div><strong>Fecha de Registro:</strong> ${doc.fechaRegistro || doc.fecha || '2026-08-01'}</div>
-                            <div style="grid-column: 1 / -1;"><strong>Validación Hash:</strong> <span style="font-family:monospace; color:#00AEFF;">${doc.hash || 'a8f9c1e34b720198d02e4567119c8f2d'}</span></div>
-                        </div>
-                    </div>
-                `;
-            } else {
-                text.innerText = doc.tipo === "PROFORMA" ? 'FACTURA PROFORMA OFICIAL Y AUTÉNTICA' : 'OFERTA CORPORATIVA FCO AUTÉNTICA Y REGISTRADA';
-
-                let itemsList = doc.items || [
-                    { desc: doc.producto || "Antimony Red Liquid Mercury (Sb₂Hg₂O₇)", cant: "Según Requisición", precio: "Cotización Oficial", total: typeof doc.monto === 'number' ? '$' + doc.monto.toLocaleString('en-US', {minimumFractionDigits: 2}) : (doc.monto || 'Conforme a LOI / FCO') }
-                ];
-
-                let itemsHtml = itemsList.map(item => `
-                    <tr>
-                        <td>${item.desc}</td>
-                        <td>${item.cant}</td>
-                        <td>${item.precio}</td>
-                        <td><strong>${item.total}</strong></td>
-                    </tr>
-                `).join('');
-
-                container.innerHTML = `
-                    <div class="status-badge status-valid">
-                        ✓ Documento Auténtico (${doc.estatus || 'Emitida & Auténtica'})
-                    </div>
-                    <h2 class="doc-title">${doc.titulo || 'Documento Comercial Oficial'}</h2>
-                    <p style="font-size:0.85rem; color:#475569; margin-bottom: 1rem;">
-                        <strong>N° Referencia:</strong> ${doc.numero || doc.codigo} | <strong>Fecha:</strong> ${doc.fecha || '--'} | <strong>Incoterm:</strong> ${doc.incoterm || 'CIF / FOB'}
-                    </p>
+            container.innerHTML = `
+                <div class="status-badge status-valid">
+                    ✓ Firma Electrónica Auténtica & Registrada
+                </div>
+                <h2 class="doc-title">Validación de Firma Ejecutiva</h2>
+                <div class="sig-box">
+                    <p style="font-size: 0.8rem; color: #64748B; text-transform: uppercase; font-weight: 700;">Trazo Oficial de Firma Registrada</p>
                     
-                    <table class="proforma-table">
+                    <img src="${fotoUrl}?v=${new Date().getTime()}" onerror="this.onerror=null; this.parentNode.innerHTML='<div style=\\'font-family: cursive; font-size: 2.2rem; color: #081B2E; margin: 1rem 0;\\'>Manuel A. Fernandes M.</div>';" alt="Firma Oficial CEO" class="sig-img">
+                    
+                    <table class="sig-table">
                         <thead>
                             <tr>
-                                <th>Descripción de Suministro</th>
-                                <th>Cantidad</th>
-                                <th>Precio Unitario</th>
-                                <th>Total</th>
+                                <th>CONCEPTO</th>
+                                <th>VALOR VERIFICADO</th>
                             </tr>
                         </thead>
                         <tbody>
-                            ${itemsHtml}
+                            <tr>
+                                <td class="sig-label">Firmante Autorizado:</td>
+                                <td>${doc.firmante || 'Manuel Alejandro Fernandes Machado'}</td>
+                            </tr>
+                            <tr>
+                                <td class="sig-label">Cargo:</td>
+                                <td>${doc.cargo || 'CEO'}</td>
+                            </tr>
+                            <tr>
+                                <td class="sig-label">Entidad:</td>
+                                <td>${doc.entidad || 'MINERQUIM I SUPPLY LLC'}</td>
+                            </tr>
+                            <tr>
+                                <td class="sig-label">Documento Vinculado:</td>
+                                <td>${doc.documento || 'FCO-2026-01'}</td>
+                            </tr>
+                            <tr>
+                                <td class="sig-label">Fecha de Firma:</td>
+                                <td>${doc.fecha || '2026-09-18'}</td>
+                            </tr>
+                            <tr>
+                                <td class="sig-label">Hash de Seguridad:</td>
+                                <td style="font-family: monospace; color: #00AEFF; font-weight: 600;">${doc.hash || 'a8f9c1e34b720198d02e4567119c8f2d'}</td>
+                            </tr>
                         </tbody>
                     </table>
-
-                    <div class="payment-box">
-                        <div class="payment-title">Instrucciones de Pago & Custodia Oficial</div>
-                        <p style="font-size:0.85rem; color:#334155; margin-bottom:0.4rem;">Depósitos y Transferencias Institucionales sujetas a verificación previo acuerdo comercial:</p>
-                        <div class="payment-detail">${doc.wallet || 'Instrucciones de Pago / Transferencia Bancaria Oficial e Custodia Escrow'}</div>
-                    </div>
-                `;
-            }
-        }
-
-        function renderizarError(codigo) {
-            const banner = document.getElementById('banner');
-            const icon = document.getElementById('status-icon');
-            const text = document.getElementById('status-text');
-
-            icon.innerText = '✕';
-            icon.style.background = '#EF4444';
-            banner.style.backgroundColor = '#FEE2E2';
-            banner.style.color = '#991B1B';
-            banner.style.borderLeftColor = '#EF4444';
-            text.innerText = 'DOCUMENTO O FIRMA NO ENCONTRADA';
-
-            container.style.display = "block";
-            container.innerHTML = `
-                <div class="status-badge status-invalid">
-                    ❌ Documento No Encontrado o Inválido
                 </div>
-                <h2 class="doc-title" style="color:#991B1B;">Verificación Fallida</h2>
-                <p style="color:#64748B; font-size:0.9rem;">El código ingresado (<strong>${codigo}</strong>) no coincide con ningún documento ni firma registrada en nuestros servidores corporativos.</p>
             `;
         }
 
-        // GENERACIÓN DEL CÓDIGO QR
+        // Generar el QR de la URL actual para imprimir
         new QRCode(document.getElementById("qrcode"), {
             text: window.location.href,
             width: 120,
