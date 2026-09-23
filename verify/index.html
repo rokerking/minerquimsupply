@@ -185,45 +185,51 @@
             });
 
         function renderizarDocumentoDinamico(doc, paramType) {
-            const tipoDoc = (doc.tipo || '').toUpperCase();
+            let fechaEmision = doc["Fecha de Emisión"] || doc.fecha || 'N/D';
+            let estatusVal = doc["Estatus"] || doc.estatus || 'VIGENTE';
+            let clienteVal = doc["Cliente / Empresa"] || doc.cliente || 'FINPRA C.I. S.A.S';
+            let productoVal = doc["Producto / Suministro"] || doc.producto || 'Antimony Red Liquid Mercury';
+            let montoVal = doc["Monto Total (USD)"] || doc.monto || '$0.00';
+            let incotermVal = doc["Incoterm / Destino"] || doc.incoterm || 'CIF';
 
-            if (paramType === 'pi' || tipoDoc.includes("PROFORMA") || tipoDoc.includes("PI")) {
+            if (paramType === 'pi' || (doc.tipo && doc.tipo.toUpperCase().includes("PROFORMA"))) {
                 document.getElementById('status-text').innerText = 'FACTURA PROFORMA OFICIAL Y AUTÉNTICA';
                 container.innerHTML = `
-                    <div class="status-badge status-valid">✓ Documento Auténtico (${doc.estatus || 'Emitida & Auténtica'})</div>
-                    <h2 class="doc-title">${doc.titulo || 'Factura Proforma Oficial'}</h2>
+                    <div class="status-badge status-valid">✓ Documento Auténtico (${estatusVal})</div>
+                    <h2 class="doc-title">Factura Proforma Oficial</h2>
                     <p style="font-size:0.85rem; color:#475569; margin-bottom: 1rem;">
-                        <strong>N° Referencia:</strong> ${doc.codigo || doc.numero || queryVal} | <strong>Fecha:</strong> ${doc.fecha || '--'}
+                        <strong>N° Referencia:</strong> ${doc["Código PI"] || queryVal} | <strong>Fecha de Emisión:</strong> ${fechaEmision}
                     </p>
                     <table class="proforma-table">
-                        <thead><tr><th>Descripción</th><th>Cantidad</th><th>Precio Unitario</th><th>Total</th></tr></thead>
-                        <tbody><tr><td>${doc.producto || 'Suministro Corporativo'}</td><td>${doc.cantidad || '1'}</td><td>${doc.precioUnitario || 'Oficial'}</td><td><strong>${doc.monto || 'USD 120,000.00'}</strong></td></tr></tbody>
+                        <thead><tr><th>Descripción</th><th>Monto Total</th><th>Incoterm</th><th>Estatus</th></tr></thead>
+                        <tbody><tr><td>${productoVal}</td><td><strong>${montoVal}</strong></td><td>${incotermVal}</td><td>${estatusVal}</td></tr></tbody>
                     </table>
                 `;
             } 
-            else if (paramType === 'fco' || tipoDoc.includes("FCO") || tipoDoc.includes("SCO")) {
+            else if (paramType === 'fco' || paramType === 'sco' || urlParams.get('fco') || urlParams.get('sco')) {
                 document.getElementById('status-text').innerText = 'OFERTA CORPORATIVA OFICIAL (FCO / SCO)';
                 container.innerHTML = `
-                    <div class="status-badge status-valid">✓ Oferta Oficial Registrada (${doc.estatus || 'VIGENTE'})</div>
-                    <h2 class="doc-title">${doc.titulo || 'Full Corporate Offer'}</h2>
+                    <div class="status-badge status-valid">✓ Oferta Oficial Registrada (${estatusVal})</div>
+                    <h2 class="doc-title">Full Corporate Offer (${doc["Código FCO"] || queryVal})</h2>
+                    <p style="font-size:0.85rem; color:#475569; margin-bottom: 1rem;">
+                        <strong>Fecha de Emisión:</strong> ${fechaEmision}
+                    </p>
                     <table class="sig-table">
-                        <tr><td class="sig-label">Cliente:</td><td><strong>${doc.cliente || 'FINPRA C.I. S.A.S'}</strong></td></tr>
-                        <tr><td class="sig-label">Producto:</td><td>${doc.producto || 'Antimony Red Liquid Mercury'}</td></tr>
-                        <tr><td class="sig-label">Monto:</td><td><strong style="color: #081B2E;">${doc.monto || '$75.400.000$'}</strong></td></tr>
-                        <tr><td class="sig-label">Incoterm:</td><td>${doc.incoterm || 'CIF'}</td></tr>
+                        <tr><td class="sig-label">Cliente / Empresa:</td><td><strong>${clienteVal}</strong></td></tr>
+                        <tr><td class="sig-label">Producto / Suministro:</td><td>${productoVal}</td></tr>
+                        <tr><td class="sig-label">Monto Total:</td><td><strong style="color: #081B2E;">${montoVal}</strong></td></tr>
+                        <tr><td class="sig-label">Incoterm / Destino:</td><td>${incotermVal}</td></tr>
                     </table>
                 `;
             } 
             else {
                 document.getElementById('status-text').innerText = 'FIRMA ELECTRÓNICA OFICIAL Y AUTÉNTICA';
                 
-                // Leyendo directamente los campos estructurados que envía Apps Script por nombre de columna
                 let fotoUrl = doc.fotoFirma || doc.firmaUrl || 'https://minerquimsupply.com/verify/firma.jpg';
                 let firmanteVal = doc.firmante || 'Manuel Alejandro Fernandes Machado';
                 let cargoVal = doc.cargo || 'CEO';
                 let entidadVal = doc.entidad || 'MINERQUIM I SUPPLY LLC';
                 let docVinculadoVal = doc.documento || 'FCO-2026-MQ-003';
-                let fechaFirma = doc.fecha || '2026-09-19';
                 let hashSeguro = doc.hash || 'a8f9c1e34b720198d02e4567119c8f2d';
 
                 container.innerHTML = `
@@ -261,8 +267,8 @@
                                     <td><strong>${docVinculadoVal}</strong></td>
                                 </tr>
                                 <tr>
-                                    <td class="sig-label">Fecha de Firma:</td>
-                                    <td>${fechaFirma}</td>
+                                    <td class="sig-label">Fecha de Emisión:</td>
+                                    <td>${fechaEmision}</td>
                                 </tr>
                                 <tr>
                                     <td class="sig-label">Hash de Seguridad:</td>
@@ -282,7 +288,7 @@
                 cargo: "CEO",
                 entidad: "MINERQUIM I SUPPLY LLC",
                 documento: "FCO-2026-MQ-003",
-                fecha: "2026-09-19",
+                "Fecha de Emisión": "2026-09-19",
                 hash: "a8f9c1e34b720198d02e4567119c8f2d",
                 fotoFirma: "https://minerquimsupply.com/verify/firma.jpg"
             }, 'sig');
