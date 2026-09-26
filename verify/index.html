@@ -188,7 +188,8 @@
         }
 
         function renderizarDocumentoDinamico(doc, paramType) {
-          console.log("DATOS RECIBIDOS:", doc);
+            console.log("DATOS RECIBIDOS:", doc);
+            let fechaEmision = doc["Fecha de Emisión"] || doc.fecha || 'N/D';
             let estatusVal = doc["Estatus"] || doc.estatus || 'VIGENTE';
             
             let estatusUpper = estatusVal.toUpperCase();
