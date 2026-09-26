@@ -191,15 +191,8 @@
             console.log("DATOS RECIBIDOS:", doc);
             let fechaEmision = doc["Fecha de Emisión"] || doc.fecha || 'N/D';
             
-            let estatusVal = doc["Estatus"] || doc.estatus;
-            if (!estatusVal) {
-                let codigoActual = (doc["Código FCO"] || doc["Código PI"] || queryVal || "").toUpperCase();
-                if (codigoActual === "FCO-2026-MQ-002") {
-                    estatusVal = "VENCIDA";
-                } else {
-                    estatusVal = "VIGENTE";
-                }
-            }
+            // Lectura totalmente dinámica basada en la celda que envíe Google Sheets
+            let estatusVal = doc["Estatus"] || doc.estatus || 'VIGENTE';
             
             let estatusUpper = estatusVal.toUpperCase();
             let esAlerta = estatusUpper.includes("DESESTIMADA") || estatusUpper.includes("VENCIDA") || estatusUpper.includes("ANULADA");
