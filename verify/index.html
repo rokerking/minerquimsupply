@@ -145,7 +145,7 @@
         const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxGw-sley-EgcLcgiInSfetCcYtGOCoGjmlTa20-3NK5WgC8rIWdK8-HHEi-2Gk_cj_3A/exec';
 
         const urlParams = new URLSearchParams(window.location.search);
-        let queryVal = urlParams.get('sig') || urlParams.get('pi') || urlParams.get('fco') || urlParams.get('sco') || 'SIG-CEO';
+      let queryVal = urlParams.get('sig') || urlParams.get('pi') || urlParams.get('fco') || urlParams.get('sco') || '';
         let queryKey = 'sig';
         if (urlParams.get('pi')) queryKey = 'pi';
         if (urlParams.get('fco') || urlParams.get('sco')) queryKey = 'fco';
