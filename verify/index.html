@@ -171,18 +171,23 @@
 
         const container = document.getElementById("resultContainer");
 
-        fetch(`${APPS_SCRIPT_URL}?${queryKey}=${encodeURIComponent(queryVal)}`)
-            .then(res => res.json())
-            .then(data => {
-                if (data && Object.keys(data).length > 0 && !data.error) {
-                    renderizarDocumentoDinamico(data, queryKey);
-                } else {
+       if (!queryVal) {
+            // Si no hay código en la URL, limpia el contenedor y no busca nada
+            container.innerHTML = `<p style="text-align:center; color:#64748B;">Ingrese una referencia arriba o escanee un código QR para validar un documento.</p>`;
+        } else {
+            fetch(`${APPS_SCRIPT_URL}?${queryKey}=${encodeURIComponent(queryVal)}`)
+                .then(res => res.json())
+                .then(data => {
+                    if (data && Object.keys(data).length > 0 && !data.error) {
+                        renderizarDocumentoDinamico(data, queryKey);
+                    } else {
+                        renderizarFirmaEjecutivaFallback();
+                    }
+                })
+                .catch(err => {
                     renderizarFirmaEjecutivaFallback();
-                }
-            })
-            .catch(err => {
-                renderizarFirmaEjecutivaFallback();
-            });
+                });
+        }
 
         function renderizarDocumentoDinamico(doc, paramType) {
             let fechaEmision = doc["Fecha de Emisión"] || doc.fecha || 'N/D';
