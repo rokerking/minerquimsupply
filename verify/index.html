@@ -56,16 +56,18 @@
         .search-input:focus { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(0, 174, 255, 0.2); }
         .search-btn { background: var(--primary); color: var(--white); border: none; padding: 0.75rem 1.5rem; border-radius: 6px; font-weight: 700; cursor: pointer; border-bottom: 2px solid var(--accent); transition: background 0.2s; }
 
-        .status-banner { 
-            background-color: #ECFDF5; 
-            color: #065F46; 
-            border-left: 5px solid #10B981; 
-            padding: 1rem 1.5rem; 
-            display: flex; 
-            align-items: center; 
-            gap: 12px; 
-            font-weight: 700; 
-            font-size: 1.05rem; 
+     .status-banner.alert {
+            background-color: #FEF2F2; 
+            color: #991B1B; 
+            border-left: 5px solid #EF4444; 
+        }
+        .status-banner.alert .status-icon { 
+            background: #EF4444; 
+        }
+        .status-invalid { 
+            background: #FEE2E2; 
+            color: #991B1B; 
+            border: 1px solid #FCA5A5; 
         }
 
         .status-icon { 
@@ -189,19 +191,28 @@
                 });
         }
 
-        function renderizarDocumentoDinamico(doc, paramType) {
+           function renderizarDocumentoDinamico(doc, paramType) {
             let fechaEmision = doc["Fecha de Emisión"] || doc.fecha || 'N/D';
             let estatusVal = doc["Estatus"] || doc.estatus || 'VIGENTE';
+            
+            // Detección automática de estatus de alerta
+            let estatusUpper = estatusVal.toUpperCase();
+            let esAlerta = estatusUpper.includes("DESESTIMADA") || estatusUpper.includes("VENCIDA") || estatusUpper.includes("ANULADA");
+
+            let bannerClass = esAlerta ? "status-banner alert" : "status-banner";
+            let badgeClass = esAlerta ? "status-badge status-invalid" : "status-badge status-valid";
+
             let clienteVal = doc["Cliente / Empresa"] || doc.cliente || 'FINPRA C.I. S.A.S';
             let productoVal = doc["Producto / Suministro"] || doc.producto || 'Antimony Red Liquid Mercury';
             let montoVal = doc["Monto Total (USD)"] || doc.monto || '$0.00';
             let incotermVal = doc["Incoterm / Destino"] || doc.incoterm || 'CIF';
-
             if (paramType === 'pi' || (doc.tipo && doc.tipo.toUpperCase().includes("PROFORMA"))) {
-                document.getElementById('status-text').innerText = 'FACTURA PROFORMA OFICIAL Y AUTÉNTICA';
-                container.innerHTML = `
-                    <div class="status-badge status-valid">✓ Documento Auténtico (${estatusVal})</div>
-                    <h2 class="doc-title">Factura Proforma Oficial</h2>
+                if (paramType === 'pi' || (doc.tipo && doc.tipo.toUpperCase().includes("PROFORMA"))) {
+            document.getElementById('status-text').innerText = 'FACTURA PROFORMA OFICIAL Y AUTÉNTICA';
+            document.getElementById('banner').className = bannerClass; // <-- Agrega esta línea
+            container.innerHTML = `
+                <div class="${badgeClass}">${esAlerta ? '✕ Documento No Vigente (' + estatusVal + ')' : '✓ Documento Auténtico (' + estatusVal + ')'}</div>
+                <h2 class="doc-title">Factura Proforma Oficial</h2>
                     <p style="font-size:0.85rem; color:#475569; margin-bottom: 1rem;">
                         <strong>N° Referencia:</strong> ${doc["Código PI"] || queryVal} | <strong>Fecha de Emisión:</strong> ${fechaEmision}
                     </p>
@@ -209,11 +220,12 @@
                         <thead><tr><th>Descripción</th><th>Monto Total</th><th>Incoterm</th><th>Estatus</th></tr></thead>
                         <tbody><tr><td>${productoVal}</td><td><strong>${montoVal}</strong></td><td>${incotermVal}</td><td>${estatusVal}</td></tr></tbody>
                     </table>
-                `;
-            } 
-            else if (paramType === 'fco' || paramType === 'sco' || urlParams.get('fco') || urlParams.get('sco')) {
-                document.getElementById('status-text').innerText = 'OFERTA CORPORATIVA OFICIAL (FCO / SCO)';
-                container.innerHTML = `
+             else if (paramType === 'fco' || paramType === 'sco' || urlParams.get('fco') || urlParams.get('sco')) {
+            document.getElementById('status-text').innerText = 'OFERTA CORPORATIVA OFICIAL (FCO / SCO)';
+            document.getElementById('banner').className = bannerClass; // <-- Agrega esta línea
+            container.innerHTML = `
+                <div class="${badgeClass}">${esAlerta ? '✕ Oferta No Vigente (' + estatusVal + ')' : '✓ Oferta Oficial Registrada (' + estatusVal + ')'}</div>
+                <h2 class="doc-title">Full Corporate Offer (${doc["Código FCO"] || queryVal})</h2>
                     <div class="status-badge status-valid">✓ Oferta Oficial Registrada (${estatusVal})</div>
                     <h2 class="doc-title">Full Corporate Offer (${doc["Código FCO"] || queryVal})</h2>
                     <p style="font-size:0.85rem; color:#475569; margin-bottom: 1rem;">
@@ -227,21 +239,22 @@
                     </table>
                 `;
             } 
-            else {
-                document.getElementById('status-text').innerText = 'FIRMA ELECTRÓNICA OFICIAL Y AUTÉNTICA';
-                
-                let fotoUrl = doc.fotoFirma || doc.firmaUrl || 'https://minerquimsupply.com/verify/firma.jpg';
-                let firmanteVal = doc.firmante || 'Manuel Alejandro Fernandes Machado';
-                let cargoVal = doc.cargo || 'CEO';
-                let entidadVal = doc.entidad || 'MINERQUIM I SUPPLY LLC';
-                let docVinculadoVal = doc.documento || 'FCO-2026-MQ-003';
-                let hashSeguro = doc.hash || 'a8f9c1e34b720198d02e4567119c8f2d';
+           else {
+            document.getElementById('status-text').innerText = 'FIRMA ELECTRÓNICA OFICIAL Y AUTÉNTICA';
+            document.getElementById('banner').className = bannerClass;
 
-                container.innerHTML = `
-                    <div class="status-badge status-valid">
-                        ✓ Firma Electrónica Auténtica & Registrada
-                    </div>
-                    <h2 class="doc-title">Validación de Firma Ejecutiva</h2>
+            let fotoUrl = doc.fotoFirma || doc.firmaUrl || 'https://minerquimsupply.com/verify/firma.jpg';
+            let firmanteVal = doc.firmante || 'Manuel Alejandro Fernandes Machado';
+            let cargoVal = doc.cargo || 'CEO';
+            let entidadVal = doc.entidad || 'MINERQUIM I SUPPLY LLC';
+            let docVinculadoVal = doc.documento || 'FCO-2026-MQ-003';
+            let hashSeguro = doc.hash || 'a8f9c1e34b720198d02e4567119c8f2d';
+
+            container.innerHTML = `
+                <div class="${badgeClass}">
+                    ${esAlerta ? '✕ Firma No Vigente (' + estatusVal + ')' : '✓ Firma Electrónica Auténtica & Registrada'}
+                </div>
+                <h2 class="doc-title">Validación de Firma Ejecutiva</h2>
                     <div class="sig-box">
                         <p style="font-size: 0.8rem; color: #64748B; text-transform: uppercase; font-weight: 700;">Trazo Oficial de Firma Registrada</p>
                         
