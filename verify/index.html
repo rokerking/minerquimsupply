@@ -191,11 +191,15 @@
             console.log("DATOS RECIBIDOS:", doc);
             let fechaEmision = doc["Fecha de Emisión"] || doc.fecha || 'N/D';
             
-            // Lectura totalmente dinámica basada en la celda que envíe Google Sheets
             let estatusVal = doc["Estatus"] || doc.estatus || 'VIGENTE';
             
             let estatusUpper = estatusVal.toUpperCase();
-            let esAlerta = estatusUpper.includes("DESESTIMADA") || estatusUpper.includes("VENCIDA") || estatusUpper.includes("ANULADA");
+            let esAlerta = estatusUpper.includes("DESESTIMADA") || 
+                           estatusUpper.includes("VENCIDA") || 
+                           estatusUpper.includes("ANULADA") || 
+                           estatusUpper.includes("EXPIRADA") || 
+                           estatusUpper.includes("CANCELADA") || 
+                           estatusUpper.includes("SUSPENDIDA");
 
             let bannerClass = esAlerta ? "status-banner alert" : "status-banner";
             let badgeClass = esAlerta ? "status-badge status-invalid" : "status-badge status-valid";
