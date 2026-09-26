@@ -56,7 +56,7 @@
         .search-input:focus { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(0, 174, 255, 0.2); }
         .search-btn { background: var(--primary); color: var(--white); border: none; padding: 0.75rem 1.5rem; border-radius: 6px; font-weight: 700; cursor: pointer; border-bottom: 2px solid var(--accent); transition: background 0.2s; }
 
-        .status-banner { display: flex; align-items: center; gap: 1rem; padding: 1rem 2rem; background: #ECFDF5; color: #065F46; border-left: 5px solid #10B981; font-weight: 700; font-size: 0.95srem; }
+        .status-banner { display: flex; align-items: center; gap: 1rem; padding: 1rem 2rem; background: #ECFDF5; color: #065F46; border-left: 5px solid #10B981; font-weight: 700; font-size: 0.95rem; }
         .status-banner.alert {
             background-color: #FEF2F2; 
             color: #991B1B; 
@@ -230,6 +230,7 @@
                         <tr><td class="sig-label">Producto / Suministro:</td><td>${productoVal}</td></tr>
                         <tr><td class="sig-label">Monto Total:</td><td><strong style="color: #081B2E;">${montoVal}</strong></td></tr>
                         <tr><td class="sig-label">Incoterm / Destino:</td><td>${incotermVal}</td></tr>
+                        <tr><td class="sig-label">Estatus:</td><td><strong style="color: ${esAlerta ? '#991B1B' : '#166534'};">${estatusVal}</strong></td></tr>
                     </table>
                 `;
             } else {
