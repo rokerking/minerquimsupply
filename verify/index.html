@@ -179,19 +179,20 @@
                     if (data && Object.keys(data).length > 0 && !data.error) {
                         renderizarDocumentoDinamico(data, queryKey);
                     } else {
-                        renderizarFirmaEjecutivaFallback();
+                        mostrarErrorRegistro(queryVal);
                     }
                 })
                 .catch(err => {
-                    renderizarFirmaEjecutivaFallback();
+                    console.error("Error de conexión:", err);
+                    mostrarErrorRegistro(queryVal);
                 });
         }
 
         function renderizarDocumentoDinamico(doc, paramType) {
             console.log("DATOS RECIBIDOS:", doc);
-            let fechaEmision = doc["Fecha de Emisión"] || doc.fecha || 'N/D';
+            let fechaEmision = doc["Fecha de Emisión"] || doc.fecha || doc.Fecha || 'N/D';
             
-            let estatusVal = doc["Estatus"] || doc.estatus || 'VIGENTE';
+            let estatusVal = doc["Estatus"] || doc.estatus || doc.Estatus || 'VIGENTE';
             
             let estatusUpper = estatusVal.toUpperCase();
             let esAlerta = estatusUpper.includes("DESESTIMADA") || 
@@ -204,10 +205,10 @@
             let bannerClass = esAlerta ? "status-banner alert" : "status-banner";
             let badgeClass = esAlerta ? "status-badge status-invalid" : "status-badge status-valid";
 
-            let clienteVal = doc["Cliente / Empresa"] || doc.cliente || 'FINPRA C.I. S.A.S';
-            let productoVal = doc["Producto / Suministro"] || doc.producto || 'Antimony Red Liquid Mercury';
-            let montoVal = doc["Monto Total (USD)"] || doc.monto || '$0.00';
-            let incotermVal = doc["Incoterm / Destino"] || doc.incoterm || 'CIF';
+            let clienteVal = doc["Cliente / Empresa"] || doc.cliente || doc.Cliente || 'N/D';
+            let productoVal = doc["Producto / Suministro"] || doc.producto || doc.Producto || 'Antimony Red Liquid Mercury';
+            let montoVal = doc["Monto Total (USD)"] || doc.monto || doc.Monto || '$0.00';
+            let incotermVal = doc["Incoterm / Destino"] || doc.incoterm || doc.Incoterm || 'CIF';
 
             if (paramType === 'pi' || (doc.tipo && doc.tipo.toUpperCase().includes("PROFORMA"))) {
                 document.getElementById('status-text').innerText = 'FACTURA PROFORMA OFICIAL Y AUTÉNTICA';
@@ -245,11 +246,11 @@
                 document.getElementById('banner').className = bannerClass;
 
                 let fotoUrl = doc.fotoFirma || doc.firmaUrl || 'https://minerquimsupply.com/verify/firma.jpg';
-                let firmanteVal = doc.firmante || 'Manuel Alejandro Fernandes Machado';
-                let cargoVal = doc.cargo || 'CEO';
-                let entidadVal = doc.entidad || 'MINERQUIM I SUPPLY LLC';
-                let docVinculadoVal = doc.documento || 'FCO-2026-MQ-003';
-                let hashSeguro = doc.hash || 'a8f9c1e34b720198d02e4567119c8f2d';
+                let firmanteVal = doc.firmante || doc["Firmante Autorizado"] || 'Manuel Alejandro Fernandes Machado';
+                let cargoVal = doc.cargo || doc.Cargo || 'CEO';
+                let entidadVal = doc.entidad || doc.Entidad || 'MINERQUIM I SUPPLY LLC';
+                let docVinculadoVal = doc.documento || doc["Documento Vinculado"] || queryVal;
+                let hashSeguro = doc.hash || doc["Hash de Seguridad"] || 'N/D';
 
                 container.innerHTML = `
                     <div class="${badgeClass}">
@@ -298,17 +299,16 @@
             }
         }
 
-        function renderizarFirmaEjecutivaFallback() {
-            renderizarDocumentoDinamico({
-                tipo: "FIRMA",
-                firmante: "Manuel Alejandro Fernandes Machado",
-                cargo: "CEO",
-                entidad: "MINERQUIM I SUPPLY LLC",
-                documento: "FCO-2026-MQ-003",
-                "Fecha de Emisión": "19/09/2026",
-                hash: "a8f9c1e34b720198d02e4567119c8f2d",
-                fotoFirma: "https://minerquimsupply.com/verify/firma.jpg"
-            }, 'sig');
+        function mostrarErrorRegistro(codigoBuscado) {
+            document.getElementById('status-text').innerText = 'REGISTRO NO ENCONTRADO EN EL SISTEMA';
+            document.getElementById('banner').className = "status-banner alert";
+            container.innerHTML = `
+                <div class="status-badge status-invalid">✕ Código no registrado o inválido</div>
+                <h2 class="doc-title">Error de Verificación</h2>
+                <p style="color:#64748B; font-size: 0.9rem;">
+                    El código <strong>${codigoBuscado}</strong> no arrojó resultados activos en la base de datos oficial de Minerquim I Supply LLC. Verifique la referencia e intente de nuevo.
+                </p>
+            `;
         }
 
         new QRCode(document.getElementById("qrcode"), {
