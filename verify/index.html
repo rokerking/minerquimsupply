@@ -245,7 +245,10 @@
                 document.getElementById('status-text').innerText = 'FIRMA ELECTRÓNICA OFICIAL Y AUTÉNTICA';
                 document.getElementById('banner').className = bannerClass;
 
+                // Captura dinámica de la foto de firma y añadido de timestamp anti-caché
                 let fotoUrl = doc.fotoFirma || doc.firmaUrl || 'https://minerquimsupply.com/verify/firma.jpg';
+                let fotoUrlConCache = fotoUrl.includes('?') ? `${fotoUrl}&v=${new Date().getTime()}` : `${fotoUrl}?v=${new Date().getTime()}`;
+
                 let firmanteVal = doc.firmante || doc["Firmante Autorizado"] || 'Manuel Alejandro Fernandes Machado';
                 let cargoVal = doc.cargo || doc.Cargo || 'CEO';
                 let entidadVal = doc.entidad || doc.Entidad || 'MINERQUIM I SUPPLY LLC';
@@ -259,7 +262,7 @@
                     <h2 class="doc-title">Validación de Firma Ejecutiva</h2>
                     <div class="sig-box">
                         <p style="font-size: 0.8rem; color: #64748B; text-transform: uppercase; font-weight: 700;">Trazo Oficial de Firma Registrada</p>
-                        <img src="${fotoUrl}?v=${new Date().getTime()}" alt="Firma Oficial" class="sig-img" onerror="this.onerror=null; this.src='https://minerquimsupply.com/verify/firma.jpg';">
+                        <img src="${fotoUrlConCache}" alt="Firma Oficial" class="sig-img" onerror="this.onerror=null; this.src='https://minerquimsupply.com/verify/firma.jpg';">
                         <table class="sig-table">
                             <thead>
                                 <tr>
@@ -287,6 +290,10 @@
                                 <tr>
                                     <td class="sig-label">Fecha de Emisión:</td>
                                     <td>${fechaEmision}</td>
+                                </tr>
+                                <tr>
+                                    <td class="sig-label">Estatus:</td>
+                                    <td><strong style="color: ${esAlerta ? '#991B1B' : '#166534'};">${estatusVal}</strong></td>
                                 </tr>
                                 <tr>
                                     <td class="sig-label">Hash de Seguridad:</td>
