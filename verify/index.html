@@ -115,7 +115,7 @@
         <div class="search-container">
             <p style="font-size: 0.9rem; color: #64748B; margin-bottom: 1rem;">Ingrese el código de verificación o referencia del documento:</p>
             <div class="search-box">
-                <input type="text" id="docCode" class="search-input" placeholder="Ejemplo: FCO-2026-MQ-003, PI-2026-001 o SIG-CEO">
+                <input type="text" id="docCode" class="search-input" placeholder="Ejemplo: FCO-2026, PI-2026, LOI-2026 o SIG-CEO">
                 <button onclick="buscarManual()" class="search-btn">VERIFICAR</button>
             </div>
         </div>
@@ -144,10 +144,11 @@
         const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxGw-sley-EgcLcgiInSfetCcYtGOCoGjmlTa20-3NK5WgC8rIWdK8-HHEi-2Gk_cj_3A/exec';
 
         const urlParams = new URLSearchParams(window.location.search);
-        let queryVal = urlParams.get('sig') || urlParams.get('pi') || urlParams.get('fco') || urlParams.get('sco') || '';
+        let queryVal = urlParams.get('sig') || urlParams.get('pi') || urlParams.get('fco') || urlParams.get('sco') || urlParams.get('loi') || '';
         let queryKey = 'sig';
         if (urlParams.get('pi')) queryKey = 'pi';
         if (urlParams.get('fco') || urlParams.get('sco')) queryKey = 'fco';
+        if (urlParams.get('loi')) queryKey = 'loi';
 
         document.getElementById('docCode').value = queryVal;
 
@@ -159,6 +160,8 @@
                 window.location.href = `?pi=${encodeURIComponent(code)}`;
             } else if (code.startsWith('SIG') || code.startsWith('FIRMA')) {
                 window.location.href = `?sig=${encodeURIComponent(code)}`;
+            } else if (code.startsWith('LOI')) {
+                window.location.href = `?loi=${encodeURIComponent(code)}`;
             } else {
                 window.location.href = `?fco=${encodeURIComponent(code)}`;
             }
@@ -209,6 +212,7 @@
             let productoVal = doc["Producto / Suministro"] || doc.producto || doc.Producto || 'Antimony Red Liquid Mercury';
             let montoVal = doc["Monto Total (USD)"] || doc.monto || doc.Monto || '$0.00';
             let incotermVal = doc["Incoterm / Destino"] || doc.incoterm || doc.Incoterm || 'CIF';
+            let encargadoVal = doc["Encargado"] || doc.encargado || 'N/D';
 
             if (paramType === 'pi' || (doc.tipo && doc.tipo.toUpperCase().includes("PROFORMA"))) {
                 document.getElementById('status-text').innerText = 'FACTURA PROFORMA OFICIAL Y AUTÉNTICA';
@@ -222,6 +226,23 @@
                     <table class="proforma-table">
                         <thead><tr><th>Descripción</th><th>Monto Total</th><th>Incoterm</th><th>Estatus</th></tr></thead>
                         <tbody><tr><td>${productoVal}</td><td><strong>${montoVal}</strong></td><td>${incotermVal}</td><td>${estatusVal}</td></tr></tbody>
+                    </table>
+                `;
+            } else if (paramType === 'loi' || (doc.tipo && doc.tipo.toUpperCase().includes("LOI"))) {
+                document.getElementById('status-text').innerText = 'CARTA DE INTENCIÓN DE COMPRA (LOI)';
+                document.getElementById('banner').className = bannerClass;
+                container.innerHTML = `
+                    <div class="${badgeClass}">${esAlerta ? '✕ Registro No Vigente (' + estatusVal + ')' : '✓ LOI Oficial Registrada (' + estatusVal + ')'}</div>
+                    <h2 class="doc-title">Letter of Intent (${doc["Código LOI"] || queryVal})</h2>
+                    <p style="font-size:0.85rem; color:#475569; margin-bottom: 1rem;">
+                        <strong>Fecha de Emisión:</strong> ${fechaEmision}
+                    </p>
+                    <table class="sig-table">
+                        <tr><td class="sig-label">Cliente / Empresa:</td><td><strong>${clienteVal}</strong></td></tr>
+                        <tr><td class="sig-label">Producto / Suministro:</td><td>${productoVal}</td></tr>
+                        <tr><td class="sig-label">Monto Total:</td><td><strong style="color: #081B2E;">${montoVal}</strong></td></tr>
+                        <tr><td class="sig-label">Encargado de la Intención:</td><td>${encargadoVal}</td></tr>
+                        <tr><td class="sig-label">Estatus:</td><td><strong style="color: ${esAlerta ? '#991B1B' : '#166534'};">${estatusVal}</strong></td></tr>
                     </table>
                 `;
             } else if (paramType === 'fco' || paramType === 'sco' || urlParams.get('fco') || urlParams.get('sco')) {
@@ -245,7 +266,6 @@
                 document.getElementById('status-text').innerText = 'FIRMA ELECTRÓNICA OFICIAL Y AUTÉNTICA';
                 document.getElementById('banner').className = bannerClass;
 
-                // Captura dinámica de la foto de firma y añadido de timestamp anti-caché
                 let fotoUrl = doc.fotoFirma || doc.firmaUrl || 'https://minerquimsupply.com/verify/firma.jpg';
                 let fotoUrlConCache = fotoUrl.includes('?') ? `${fotoUrl}&v=${new Date().getTime()}` : `${fotoUrl}?v=${new Date().getTime()}`;
 
