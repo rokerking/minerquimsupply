@@ -203,7 +203,8 @@
                            estatusUpper.includes("ANULADA") || 
                            estatusUpper.includes("EXPIRADA") || 
                            estatusUpper.includes("CANCELADA") || 
-                           estatusUpper.includes("SUSPENDIDA");
+                           estatusUpper.includes("SUSPENDIDA") ||
+                           estatusUpper.includes("RECHAZADA");
 
             let bannerClass = esAlerta ? "status-banner alert" : "status-banner";
             let badgeClass = esAlerta ? "status-badge status-invalid" : "status-badge status-valid";
