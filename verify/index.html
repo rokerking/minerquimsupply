@@ -115,7 +115,7 @@
         <div class="search-container">
             <p style="font-size: 0.9rem; color: #64748B; margin-bottom: 1rem;">Ingrese el código de verificación o referencia del documento:</p>
             <div class="search-box">
-                <input type="text" id="docCode" class="search-input" placeholder="Ejemplo: FCO-2026, PI-2026, LOI-2026 o SIG-CEO">
+                <input type="text" id="docCode" class="search-input" placeholder="Ejemplo: 8850-001, FCO-2026, PI-2026, LOI-2026 o SIG-CEO">
                 <button onclick="buscarManual()" class="search-btn">VERIFICAR</button>
             </div>
         </div>
@@ -144,11 +144,12 @@
         const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxGw-sley-EgcLcgiInSfetCcYtGOCoGjmlTa20-3NK5WgC8rIWdK8-HHEi-2Gk_cj_3A/exec';
 
         const urlParams = new URLSearchParams(window.location.search);
-        let queryVal = urlParams.get('sig') || urlParams.get('pi') || urlParams.get('fco') || urlParams.get('sco') || urlParams.get('loi') || '';
+        let queryVal = urlParams.get('sig') || urlParams.get('pi') || urlParams.get('fco') || urlParams.get('sco') || urlParams.get('loi') || urlParams.get('broker') || '';
         let queryKey = 'sig';
         if (urlParams.get('pi')) queryKey = 'pi';
         if (urlParams.get('fco') || urlParams.get('sco')) queryKey = 'fco';
         if (urlParams.get('loi')) queryKey = 'loi';
+        if (urlParams.get('broker')) queryKey = 'broker';
 
         document.getElementById('docCode').value = queryVal;
 
@@ -162,6 +163,8 @@
                 window.location.href = `?sig=${encodeURIComponent(code)}`;
             } else if (code.startsWith('LOI')) {
                 window.location.href = `?loi=${encodeURIComponent(code)}`;
+            } else if (code.includes('-') || !isNaN(code)) {
+                window.location.href = `?broker=${encodeURIComponent(code)}`;
             } else {
                 window.location.href = `?fco=${encodeURIComponent(code)}`;
             }
@@ -195,7 +198,7 @@
             console.log("DATOS RECIBIDOS:", doc);
             let fechaEmision = doc["Fecha de Emisión"] || doc.fecha || doc.Fecha || 'N/D';
             
-            let estatusVal = doc["Estatus"] || doc.estatus || doc.Estatus || 'VIGENTE';
+            let estatusVal = doc["Estatus"] || doc.estatus || doc.estatusVal || 'ACTIVO';
             
             let estatusUpper = estatusVal.toUpperCase();
             let esAlerta = estatusUpper.includes("DESESTIMADA") || 
@@ -204,12 +207,38 @@
                            estatusUpper.includes("EXPIRADA") || 
                            estatusUpper.includes("CANCELADA") || 
                            estatusUpper.includes("SUSPENDIDA") ||
-                           estatusUpper.includes("RECHAZADA");
+                           estatusUpper.includes("RECHAZADA") ||
+                           estatusUpper.includes("REVOCADO");
 
             let bannerClass = esAlerta ? "status-banner alert" : "status-banner";
             let badgeClass = esAlerta ? "status-badge status-invalid" : "status-badge status-valid";
 
-            if (paramType === 'pi' || (doc.tipo && doc.tipo.toUpperCase().includes("PROFORMA"))) {
+            if (paramType === 'broker' || (doc.tipo && doc.tipo.toUpperCase().includes("BROKER"))) {
+                document.getElementById('status-text').innerText = 'CREDENCIAL DE BROKER AUTORIZADO';
+                document.getElementById('banner').className = bannerClass;
+                
+                let nombreBroker = doc.datos_broker || doc["Datos del Broker"] || 'N/D';
+                let idBroker = doc.id_broker || doc["ID del Broker"] || queryVal;
+                let correoBroker = doc.correo || doc["Correo Corporativo Asociado"] || 'N/D';
+                let firmaBroker = doc.firma_autorizada || doc["Firma Autorizada"] || 'Manuel Alejandro Fernandes Machado (CEO)';
+                
+                container.innerHTML = `
+                    <div class="${badgeClass}">${esAlerta ? '✕ Credencial Revocada (' + estatusVal + ')' : '✓ Broker Oficial Autorizado (' + estatusVal + ')'}</div>
+                    <h2 class="doc-title">Credencial Ejecutiva de Broker</h2>
+                    <table class="sig-table">
+                        <tr><td class="sig-label">Datos del Broker:</td><td><strong>${nombreBroker}</strong></td></tr>
+                        <tr><td class="sig-label">ID de Broker:</td><td><strong style="color: #00AEFF;">${idBroker}</strong></td></tr>
+                        <tr><td class="sig-label">Correo Corporativo:</td><td>${correoBroker}</td></tr>
+                        <tr><td class="sig-label">Entidad Emisora:</td><td>MINERQUIM SUPPLY LLC</td></tr>
+                        <tr><td class="sig-label">Firma Autorizada:</td><td>${firmaBroker}</td></tr>
+                        <tr><td class="sig-label">Estatus Actual:</td><td><strong style="color: ${esAlerta ? '#991B1B' : '#166534'};">${estatusVal}</strong></td></tr>
+                    </table>
+                    <div style="margin-top: 1.5rem; padding: 1rem; background: #FEF2F2; border-left: 4px solid #EF4444; border-radius: 4px;">
+                        <p style="font-size: 0.82rem; color: #991B1B; font-weight: 700; text-transform: uppercase;">⚠️ Restricción Financiera Absoluta:</p>
+                        <p style="font-size: 0.8rem; color: #7F1D1D; margin-top: 0.3rem;">El portador de esta credencial <strong>NO está autorizado</strong> para solicitar, recibir o gestionar adelantos de dinero ni pagos anticipados de ningún tipo en nombre de MINERQUIM SUPPLY LLC.</p>
+                    </div>
+                `;
+            } else if (paramType === 'pi' || (doc.tipo && doc.tipo.toUpperCase().includes("PROFORMA"))) {
                 let productoVal = doc["Producto / Suministro"] || doc["Producto"] || 'Antimony Red Liquid Mercury';
                 let montoVal = doc["Monto Total (USD)"] || doc["Monto Total"] || doc["Monto"] || '$0.00';
                 let incotermVal = doc["Incoterm / Destino"] || doc["Incoterm"] || 'CIF';
